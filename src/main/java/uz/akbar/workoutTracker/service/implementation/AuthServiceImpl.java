@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import uz.akbar.workoutTracker.entity.User;
+import uz.akbar.workoutTracker.enums.Role;
 import uz.akbar.workoutTracker.payload.ApiResponse;
 import uz.akbar.workoutTracker.payload.RegisterDto;
 import uz.akbar.workoutTracker.repository.UserRepository;
@@ -31,6 +32,7 @@ public class AuthServiceImpl implements AuthService {
 		User user = new User();
 		user.setUsername(dto.getUsername());
 		user.setEmail(dto.getEmail());
+		user.setRole(Role.ROLE_USER);
 		user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
 		try {

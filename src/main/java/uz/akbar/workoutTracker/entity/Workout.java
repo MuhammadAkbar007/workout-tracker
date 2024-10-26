@@ -21,7 +21,7 @@ import jakarta.persistence.OneToMany;
 public class Workout {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
 	private LocalDateTime scheduledDateTime;
