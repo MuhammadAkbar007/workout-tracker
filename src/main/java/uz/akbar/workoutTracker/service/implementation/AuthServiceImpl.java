@@ -1,12 +1,16 @@
 package uz.akbar.workoutTracker.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import uz.akbar.workoutTracker.entity.User;
 import uz.akbar.workoutTracker.enums.Role;
 import uz.akbar.workoutTracker.payload.ApiResponse;
+import uz.akbar.workoutTracker.payload.LogInDto;
 import uz.akbar.workoutTracker.payload.RegisterDto;
 import uz.akbar.workoutTracker.repository.UserRepository;
 import uz.akbar.workoutTracker.service.AuthService;
@@ -18,10 +22,10 @@ import uz.akbar.workoutTracker.service.AuthService;
 public class AuthServiceImpl implements AuthService {
 
 	@Autowired
-	UserRepository repository;
+	private UserRepository repository;
 
 	@Autowired
-	BCryptPasswordEncoder passwordEncoder;
+	private BCryptPasswordEncoder passwordEncoder;
 
 	@Override
 	public ApiResponse registerUser(RegisterDto dto) {
@@ -43,6 +47,12 @@ public class AuthServiceImpl implements AuthService {
 			return new ApiResponse(false, "Error during save to database");
 		}
 
+	}
+
+	@Override
+	public ApiResponse logIn(LogInDto dto) {
+		// TODO: login service business logic
+		return null;
 	}
 
 }

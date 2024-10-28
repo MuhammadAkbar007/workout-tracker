@@ -20,7 +20,7 @@ import uz.akbar.workoutTracker.service.implementation.AuthServiceImpl;
 public class AuthController {
 
 	@Autowired
-	AuthServiceImpl service;
+	private AuthServiceImpl service;
 
 	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterDto dto) {

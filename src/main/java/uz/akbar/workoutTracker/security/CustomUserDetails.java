@@ -9,38 +9,37 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import uz.akbar.workoutTracker.entity.User;
-import uz.akbar.workoutTracker.enums.Role;
 
 /**
  * CustomUserDetails
  */
 public class CustomUserDetails implements UserDetails {
 
-	private String username;
-	private String password;
-	private Role role;
+	private User user;
 
 	public CustomUserDetails(User user) {
-		this.username = user.getUsername();
-		this.password = user.getPassword();
-		this.role = user.getRole();
+		this.user = user;
+	}
+
+	public User getUser() {
+		return user;
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> roles = new ArrayList<>();
-		roles.add(new SimpleGrantedAuthority(role.name()));
+		roles.add(new SimpleGrantedAuthority(user.getRole().name()));
 		return roles;
 	}
 
 	@Override
 	public String getPassword() {
-		return password;
+		return user.getPassword();
 	}
 
 	@Override
 	public String getUsername() {
-		return username;
+		return user.getUsername();
 	}
 
 	@Override
