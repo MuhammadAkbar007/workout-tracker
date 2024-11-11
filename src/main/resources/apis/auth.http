@@ -19,3 +19,13 @@ Content-Type: application/json
 	"email": "akbarjondev007@gmail.com",
 	"password": "root123"
 }
+
+### LogIn user
+### Return -> success ? "uuid" : "string message"
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+	"username": "fotismenos",
+	"password": "root123"
+}
