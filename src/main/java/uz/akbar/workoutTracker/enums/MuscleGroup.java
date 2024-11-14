@@ -1,14 +1,11 @@
 package uz.akbar.workoutTracker.enums;
 
-/**
- * MuscleGroup
- */
+/** MuscleGroup */
 public enum MuscleGroup {
-
-	CHEST,
-	BACK,
-	LEGS,
-	ARMS,
-	SHOULDERS,
-	CORE
+    CHEST,
+    BACK,
+    LEGS,
+    ARMS,
+    SHOULDERS,
+    CORE
 }

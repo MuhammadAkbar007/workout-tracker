@@ -1,9 +1,7 @@
 package uz.akbar.workoutTracker.enums;
 
-/**
- * Role
- */
+/** Role */
 public enum Role {
-	ROLE_ADMIN,
-	ROLE_USER
+    ROLE_ADMIN,
+    ROLE_USER
 }

@@ -1,23 +1,21 @@
 package uz.akbar.workoutTracker.payload;
 
-/**
- * JwtDto
- */
+/** JwtDto */
 public class JwtDto {
 
-	private String username;
-	private String role;
+    private String username;
+    private String role;
 
-	public JwtDto(String username, String role) {
-		this.username = username;
-		this.role = role;
-	}
+    public JwtDto(String username, String role) {
+        this.username = username;
+        this.role = role;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public String getRole() {
-		return role;
-	}
+    public String getRole() {
+        return role;
+    }
 }

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/home")
 public class HomeController {
 
-  @GetMapping("/greet")
-  public String greet() {
-    return "Hello world!";
-  }
+    @GetMapping("/greet")
+    public String greet() {
+        return "Hello world!";
+    }
 }

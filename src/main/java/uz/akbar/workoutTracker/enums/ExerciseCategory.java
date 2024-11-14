@@ -1,12 +1,9 @@
 package uz.akbar.workoutTracker.enums;
 
-/**
- * ExerciseCategory
- */
+/** ExerciseCategory */
 public enum ExerciseCategory {
-
-	CARDIO,
-	STRENGTH,
-	FLEXIBILITY,
-	BALANCE
+    CARDIO,
+    STRENGTH,
+    FLEXIBILITY,
+    BALANCE
 }

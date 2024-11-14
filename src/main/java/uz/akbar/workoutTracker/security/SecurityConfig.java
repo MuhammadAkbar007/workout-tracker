@@ -1,6 +1,5 @@
 package uz.akbar.workoutTracker.security;
 
-import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,56 +15,58 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 /** SecurityConfig */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-  @Autowired private UserDetailsService userDetailsService;
+    @Autowired private UserDetailsService userDetailsService;
 
-  @Bean
-  public AuthenticationProvider authenticationProvider() {
-    final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-    authenticationProvider.setUserDetailsService(userDetailsService);
-    authenticationProvider.setPasswordEncoder(passwordEncoder());
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
 
-    return authenticationProvider;
-  }
+        return authenticationProvider;
+    }
 
-  @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(
-        authorizationManagerRequestMatcherRegistry -> {
-          authorizationManagerRequestMatcherRegistry
-              .requestMatchers("/api/v1/auth/*")
-              .permitAll()
-              .anyRequest()
-              .authenticated();
-        });
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(
+                authorizationManagerRequestMatcherRegistry -> {
+                    authorizationManagerRequestMatcherRegistry
+                            .requestMatchers("/api/v1/auth/*")
+                            .permitAll()
+                            .anyRequest()
+                            .authenticated();
+                });
 
-    http.httpBasic(Customizer.withDefaults());
+        http.httpBasic(Customizer.withDefaults());
 
-    // http.csrf(Customizer.withDefaults()); // csrf yoqilgan
-    http.csrf(AbstractHttpConfigurer::disable); // csrf o'chirilgan
+        // http.csrf(Customizer.withDefaults()); // csrf yoqilgan
+        http.csrf(AbstractHttpConfigurer::disable); // csrf o'chirilgan
 
-    http.cors(
-        httpSecurityCorsConfigurer -> { // cors konfiguratsiya qilingan
-          CorsConfiguration configuration = new CorsConfiguration();
+        http.cors(
+                httpSecurityCorsConfigurer -> { // cors konfiguratsiya qilingan
+                    CorsConfiguration configuration = new CorsConfiguration();
 
-          configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-          configuration.setAllowedMethods(Arrays.asList("*"));
-          configuration.setAllowedHeaders(Arrays.asList("*"));
+                    configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+                    configuration.setAllowedMethods(Arrays.asList("*"));
+                    configuration.setAllowedHeaders(Arrays.asList("*"));
 
-          UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-          source.registerCorsConfiguration("/**", configuration);
-          httpSecurityCorsConfigurer.configurationSource(source);
-        });
+                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                    source.registerCorsConfiguration("/**", configuration);
+                    httpSecurityCorsConfigurer.configurationSource(source);
+                });
 
-    return http.build();
-  }
+        return http.build();
+    }
 
-  @Bean
-  public BCryptPasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
