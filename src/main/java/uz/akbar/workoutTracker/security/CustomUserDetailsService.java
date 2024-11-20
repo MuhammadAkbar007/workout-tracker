@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import uz.akbar.workoutTracker.entity.User;
 import uz.akbar.workoutTracker.repository.UserRepository;
 
-import java.util.Optional;
-
 /** CustomUserDetailsService */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -19,13 +17,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> optional = userRepository.findByUsername(username);
+        User user =
+                userRepository
+                        .findByUsername(username)
+                        .orElseThrow(
+                                () ->
+                                        new UsernameNotFoundException(
+                                                "user by " + username + " username not found"));
 
-        if (optional.isEmpty()) {
-            throw new UsernameNotFoundException("user by " + username + " username not found");
-        }
-
-        User user = optional.get();
         CustomUserDetails userDetails = new CustomUserDetails(user);
         return userDetails;
     }

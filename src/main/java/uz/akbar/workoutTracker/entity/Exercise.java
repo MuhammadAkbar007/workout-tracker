@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import lombok.Data;
+
 import uz.akbar.workoutTracker.enums.ExerciseCategory;
 import uz.akbar.workoutTracker.enums.MuscleGroup;
 
@@ -15,6 +17,7 @@ import java.util.UUID;
 
 /** Exercise */
 @Entity
+@Data
 public class Exercise {
 
     @Id
@@ -38,68 +41,4 @@ public class Exercise {
 
     @Enumerated(EnumType.STRING)
     private MuscleGroup muscleGroup;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public ExerciseCategory getCategory() {
-        return category;
-    }
-
-    public void setCategory(ExerciseCategory category) {
-        this.category = category;
-    }
-
-    public MuscleGroup getMuscleGroup() {
-        return muscleGroup;
-    }
-
-    public void setMuscleGroup(MuscleGroup muscleGroup) {
-        this.muscleGroup = muscleGroup;
-    }
-
-    public int getSets() {
-        return sets;
-    }
-
-    public void setSets(int sets) {
-        this.sets = sets;
-    }
-
-    public int getRepetitions() {
-        return repetitions;
-    }
-
-    public void setRepetitions(int repetitions) {
-        this.repetitions = repetitions;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
 }

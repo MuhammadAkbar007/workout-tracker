@@ -1,39 +1,71 @@
 package uz.akbar.workoutTracker.config;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.HashMap;
+import uz.akbar.workoutTracker.exception.AppBadException;
+
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /** GlobalExceptionHandler */
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-
-        ex.getBindingResult()
-                .getAllErrors()
-                .forEach(
-                        error -> {
-                            String fieldName = ((FieldError) error).getField();
-                            String errorMessage = error.getDefaultMessage();
-                            errors.put(fieldName, errorMessage);
-                        });
-
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }
+    /* Old gpt version */
+    // @ExceptionHandler(MethodArgumentNotValidException.class)
+    // public ResponseEntity<Map<String, String>> handleValidationExceptions(
+    //         MethodArgumentNotValidException ex) {
+    //     Map<String, String> errors = new HashMap<>();
+    //
+    //     ex.getBindingResult()
+    //             .getAllErrors()
+    //             .forEach(
+    //                     error -> {
+    //                         String fieldName = ((FieldError) error).getField();
+    //                         String errorMessage = error.getDefaultMessage();
+    //                         errors.put(fieldName, errorMessage);
+    //                     });
+    //
+    //     return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    // }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(RuntimeException e) {
         e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        return ResponseEntity.internalServerError().body(e.getMessage());
+    }
+
+    @ExceptionHandler(AppBadException.class)
+    public ResponseEntity<?> handle(AppBadException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", new Date());
+        body.put("status", status.value());
+
+        List<String> errors = new LinkedList<>();
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errors.add(error.getDefaultMessage());
+        }
+        body.put("errors", errors);
+        return new ResponseEntity<>(body, headers, status);
     }
 }

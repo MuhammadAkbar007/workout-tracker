@@ -29,3 +29,7 @@ Content-Type: application/json
 	"username": "fotismenos",
 	"password": "root123"
 }
+
+### Home
+GET http://localhost:8080/api/v1/home
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmb3Rpc21lbm9zIiwiaWF0IjoxNzMxOTI4NDkwLCJleHAiOjE3MzIwMTQ4OTB9.vzNw-phaGdTdiUfbT_gP6DzcPOt8fHR_MSqaltvl0Ls

@@ -1,49 +1,69 @@
 package uz.akbar.workoutTracker.security.jwt;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-import uz.akbar.workoutTracker.payload.JwtDto;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.crypto.SecretKey;
+
 /** JwtUtil */
+@Component
 public class JwtUtil {
 
-    private static final int tokenLiveTime = 1000 * 3600 * 24; // 1-day
-    private static final String secretKey =
-            "veryLongSecretmazgillattayevlasharaaxmojonjinnijonsurbetbekkiydirhonuxlatdibekloxovdangasabekochkozjonduxovmashaynikmaydagapchishularnioqiganbolsangizgapyoqaniqsizmazgi";
+    private final long expirationTime = 1000 * 3600 * 24; // 1-day
+    private final String secretKey = generateSecretKey();
 
-    public static String encode(String username, String role) {
+    // private final String secretKey =
+    // "veryLongSecretmazgillattayevlasharaaxmojonjinnijonsurbetbekkiydirhonuxlatdibekloxovdangasabekochkozjonduxovmashaynikmaydagapchishularnioqiganbolsangizgapyoqaniqsizmazgi";
+
+    public String generateToken(Authentication authentication) {
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("username", username);
-        extraClaims.put("role", role);
+        extraClaims.put("username", authentication.getPrincipal());
+        extraClaims.put("roles", authentication.getAuthorities());
 
         return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(username)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + tokenLiveTime))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .claims(extraClaims)
+                .subject(authentication.getName())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(getSignInKey())
                 .compact();
     }
 
-    public static JwtDto decode(String token) {
-        Claims claims =
-                Jwts.parser().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();
-        String username = (String) claims.get("username");
-        String role = (String) claims.get("role");
-        return new JwtDto(username, role);
+    public String getUsername(String token) {
+        return Jwts.parser()
+                .verifyWith((SecretKey) getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
     }
 
-    private static Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+    public boolean validateToken(String token) {
+        Jwts.parser().verifyWith((SecretKey) getSignInKey()).build().parse(token);
+        return true;
+    }
+
+    private SecretKey getSignInKey() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+    }
+
+    private String generateSecretKey() {
+        int length = 32;
+        byte[] keyBytes = new byte[length];
+
+        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.nextBytes(keyBytes);
+
+        return Base64.getEncoder().encodeToString(keyBytes);
     }
 }
