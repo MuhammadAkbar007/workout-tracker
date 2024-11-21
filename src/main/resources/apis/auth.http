@@ -1,11 +1,10 @@
 ### Register user
-### Return -> success ? "uuid" : "string message"
 POST http://localhost:8080/api/v1/auth/register
 Content-Type: application/json
 
 {
 	"username": "fotismenos",
-	"email": "akbarjondev007@gmail.com",
+	"email": "fotismenos007@mail.ru",
 	"password": "root123"
 }
 
@@ -20,16 +19,15 @@ Content-Type: application/json
 	"password": "root123"
 }
 
-### LogIn user
-### Return -> success ? "uuid" : "string message"
+### LogIn user & get jwt token
 POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
 {
-	"username": "fotismenos",
+	"username": "akbar007",
 	"password": "root123"
 }
 
-### Home
+### Home test closed api
 GET http://localhost:8080/api/v1/home
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmb3Rpc21lbm9zIiwiaWF0IjoxNzMxOTI4NDkwLCJleHAiOjE3MzIwMTQ4OTB9.vzNw-phaGdTdiUfbT_gP6DzcPOt8fHR_MSqaltvl0Ls
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W10sInVzZXJuYW1lIjp7InVzZXIiOnsiaWQiOiJhNjY2YjdjNy1iZTIzLTRiNWYtODdjOS01ZmFjYWJmNTg0MDIiLCJ1c2VybmFtZSI6ImFrYmFyMDA3IiwiZW1haWwiOiJha2JhcmpvbmRldjAwN0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCQ1cnlkMmcyVzRHQzRsUURGSVNRM05lc0lvZlpkTExLM3BGRmlwczBhbE0xaHlXNWxPNkhHdSIsInJvbGVzIjpbXX0sImVuYWJsZWQiOnRydWUsInVzZXJuYW1lIjoiYWtiYXIwMDciLCJhdXRob3JpdGllcyI6W10sInBhc3N3b3JkIjoiJDJhJDEwJDVyeWQyZzJXNEdDNGxRREZJU1EzTmVzSW9mWmRMTEszcEZGaXBzMGFsTTFoeVc1bE82SEd1IiwiYWNjb3VudE5vbkV4cGlyZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWUsImNyZWRlbnRpYWxzTm9uRXhwaXJlZCI6dHJ1ZX0sInN1YiI6ImFrYmFyMDA3IiwiaWF0IjoxNzMyMTA4MTIwLCJleHAiOjE3MzIxOTQ1MjB9.kz98s-CA93cF4n2zfuyHdz3kB6PUEFKQHctfOLxM0Zk

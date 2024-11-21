@@ -16,10 +16,13 @@ import uz.akbar.workoutTracker.exception.AppBadException;
 import uz.akbar.workoutTracker.payload.AuthResponseDto;
 import uz.akbar.workoutTracker.payload.LogInDto;
 import uz.akbar.workoutTracker.payload.RegisterDto;
+import uz.akbar.workoutTracker.payload.UserDto;
+import uz.akbar.workoutTracker.repository.RoleRepository;
 import uz.akbar.workoutTracker.repository.UserRepository;
 import uz.akbar.workoutTracker.security.jwt.JwtUtil;
 import uz.akbar.workoutTracker.service.AuthService;
 
+import java.util.Optional;
 import java.util.Set;
 
 /** AuthServiceImpl */
@@ -27,27 +30,31 @@ import java.util.Set;
 public class AuthServiceImpl implements AuthService {
 
     @Autowired private UserRepository repository;
+    @Autowired private RoleRepository roleRepository;
     @Autowired private BCryptPasswordEncoder passwordEncoder;
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private JwtUtil jwtUtil;
 
     @Override
     @Transactional
-    public User registerUser(RegisterDto dto) {
-        if (repository.existsByEmailOrUsername(dto.getEmail(), dto.getUsername())) {
+    public UserDto registerUser(RegisterDto dto) {
+        if (repository.existsByEmailOrUsername(dto.getEmail(), dto.getUsername()))
             throw new AppBadException("User already exists");
-        }
 
-        Role role = new Role();
-        role.setRoleType(RoleType.ROLE_USER);
+        Optional<Role> optionalRole = roleRepository.findByRoleType(RoleType.ROLE_USER);
+        Role role = optionalRole.orElseThrow(() -> new RuntimeException("Role User is not found"));
 
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         user.setRoles(Set.of(role));
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        User saved = repository.save(user);
 
-        return repository.save(user);
+        UserDto userDto =
+                new UserDto(saved.getId(), saved.getUsername(), saved.getEmail(), saved.getRoles());
+
+        return userDto;
     }
 
     @Override

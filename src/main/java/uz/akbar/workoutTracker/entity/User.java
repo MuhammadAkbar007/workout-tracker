@@ -1,6 +1,5 @@
 package uz.akbar.workoutTracker.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -35,7 +34,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

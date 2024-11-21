@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import uz.akbar.workoutTracker.entity.User;
 import uz.akbar.workoutTracker.payload.AuthResponseDto;
 import uz.akbar.workoutTracker.payload.LogInDto;
 import uz.akbar.workoutTracker.payload.RegisterDto;
+import uz.akbar.workoutTracker.payload.UserDto;
 import uz.akbar.workoutTracker.service.implementation.AuthServiceImpl;
 
 /** AuthController */
@@ -24,8 +24,8 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterDto dto) {
-        User saved = service.registerUser(dto);
-        return ResponseEntity.status(201).body(saved);
+        UserDto userDto = service.registerUser(dto);
+        return ResponseEntity.status(201).body(userDto);
     }
 
     @PostMapping("/login")
