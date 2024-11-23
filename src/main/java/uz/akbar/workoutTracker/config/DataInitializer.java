@@ -4,6 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import uz.akbar.workoutTracker.entity.Role;
 import uz.akbar.workoutTracker.entity.User;
@@ -19,6 +20,7 @@ import java.util.Set;
 public class DataInitializer {
 
     @Bean
+    @Transactional
     public CommandLineRunner initData(
             UserRepository userRepository,
             RoleRepository roleRepository,

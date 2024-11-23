@@ -9,18 +9,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import uz.akbar.workoutTracker.entity.RefreshToken;
 import uz.akbar.workoutTracker.entity.Role;
 import uz.akbar.workoutTracker.entity.User;
 import uz.akbar.workoutTracker.enums.RoleType;
 import uz.akbar.workoutTracker.exception.AppBadException;
-import uz.akbar.workoutTracker.payload.AuthResponseDto;
+import uz.akbar.workoutTracker.exception.RefreshTokenException;
+import uz.akbar.workoutTracker.payload.JwtResponseDto;
 import uz.akbar.workoutTracker.payload.LogInDto;
+import uz.akbar.workoutTracker.payload.RefreshTokenRequestDto;
 import uz.akbar.workoutTracker.payload.RegisterDto;
 import uz.akbar.workoutTracker.payload.UserDto;
 import uz.akbar.workoutTracker.repository.RoleRepository;
 import uz.akbar.workoutTracker.repository.UserRepository;
 import uz.akbar.workoutTracker.security.jwt.JwtUtil;
 import uz.akbar.workoutTracker.service.AuthService;
+import uz.akbar.workoutTracker.service.RefreshTokenService;
 
 import java.util.Optional;
 import java.util.Set;
@@ -34,6 +38,7 @@ public class AuthServiceImpl implements AuthService {
     @Autowired private BCryptPasswordEncoder passwordEncoder;
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private JwtUtil jwtUtil;
+    @Autowired private RefreshTokenService refreshTokenService;
 
     @Override
     @Transactional
@@ -58,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponseDto logIn(LogInDto dto) {
+    public JwtResponseDto logIn(LogInDto dto) {
 
         Authentication authentication =
                 authenticationManager.authenticate(
@@ -67,8 +72,40 @@ public class AuthServiceImpl implements AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = jwtUtil.generateToken(authentication);
+        if (!authentication.isAuthenticated())
+            throw new AppBadException("User is not authenticated");
 
-        return new AuthResponseDto(token);
+        RefreshToken refreshTokenObject = refreshTokenService.createRefreshToken(dto.getUsername());
+        String refreshToken = refreshTokenObject.getToken();
+        String accessToken = jwtUtil.generateToken(authentication);
+
+        return new JwtResponseDto(accessToken, refreshToken);
+    }
+
+    @Override
+    public JwtResponseDto refreshToken(RefreshTokenRequestDto dto) {
+
+        RefreshToken token =
+                refreshTokenService
+                        .findByToken(dto.getRefreshToken())
+                        .orElseThrow(
+                                () ->
+                                        new RefreshTokenException(
+                                                "Refresh token is not in database!"));
+
+        refreshTokenService.verifyRefreshToken(token);
+
+        User user = token.getUser();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.isAuthenticated())
+            throw new AppBadException("User is not authenticated");
+
+        RefreshToken refreshTokenObject =
+                refreshTokenService.createRefreshToken(user.getUsername());
+        String refreshToken = refreshTokenObject.getToken();
+        String accessToken = jwtUtil.generateToken(authentication);
+
+        return new JwtResponseDto(accessToken, refreshToken);
     }
 }

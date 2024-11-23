@@ -9,18 +9,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import uz.akbar.workoutTracker.payload.AuthResponseDto;
+import uz.akbar.workoutTracker.payload.JwtResponseDto;
 import uz.akbar.workoutTracker.payload.LogInDto;
+import uz.akbar.workoutTracker.payload.RefreshTokenRequestDto;
 import uz.akbar.workoutTracker.payload.RegisterDto;
 import uz.akbar.workoutTracker.payload.UserDto;
-import uz.akbar.workoutTracker.service.implementation.AuthServiceImpl;
+import uz.akbar.workoutTracker.service.AuthService;
 
 /** AuthController */
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
-    @Autowired private AuthServiceImpl service;
+    @Autowired private AuthService service;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterDto dto) {
@@ -30,7 +31,13 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> logInToSystem(@Valid @RequestBody LogInDto dto) {
-        AuthResponseDto authResponseDto = service.logIn(dto);
-        return ResponseEntity.ok(authResponseDto);
+        JwtResponseDto jwtResponseDto = service.logIn(dto);
+        return ResponseEntity.ok(jwtResponseDto);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequestDto dto) {
+        JwtResponseDto jwResponseDto = service.refreshToken(dto);
+        return ResponseEntity.ok(jwResponseDto);
     }
 }

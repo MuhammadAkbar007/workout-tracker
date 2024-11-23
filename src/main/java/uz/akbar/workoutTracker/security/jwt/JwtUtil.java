@@ -19,7 +19,7 @@ import javax.crypto.SecretKey;
 @Component
 public class JwtUtil {
 
-    private final long expirationTime = 1000 * 3600 * 24; // 1-day
+    private final long expiryTime = 1000 * 3600 * 24; // 1-day
     private final String secretKey = generateSecretKey();
 
     // private final String secretKey =
@@ -34,7 +34,7 @@ public class JwtUtil {
                 .claims(extraClaims)
                 .subject(authentication.getName())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expirationTime))
+                .expiration(new Date(System.currentTimeMillis() + expiryTime))
                 .signWith(getSignInKey())
                 .compact();
     }

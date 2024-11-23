@@ -11,6 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import uz.akbar.workoutTracker.exception.AppBadException;
+import uz.akbar.workoutTracker.exception.RefreshTokenException;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -49,6 +50,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AppBadException.class)
     public ResponseEntity<?> handle(AppBadException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(RefreshTokenException.class)
+    public ResponseEntity<?> handle(RefreshTokenException e) {
+        return ResponseEntity.status(403).body(e.getMessage());
     }
 
     @Override

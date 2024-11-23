@@ -1,7 +1,8 @@
 package uz.akbar.workoutTracker.service;
 
-import uz.akbar.workoutTracker.payload.AuthResponseDto;
+import uz.akbar.workoutTracker.payload.JwtResponseDto;
 import uz.akbar.workoutTracker.payload.LogInDto;
+import uz.akbar.workoutTracker.payload.RefreshTokenRequestDto;
 import uz.akbar.workoutTracker.payload.RegisterDto;
 import uz.akbar.workoutTracker.payload.UserDto;
 
@@ -10,5 +11,7 @@ public interface AuthService {
 
     UserDto registerUser(RegisterDto dto);
 
-    AuthResponseDto logIn(LogInDto dto);
+    JwtResponseDto logIn(LogInDto dto);
+
+    JwtResponseDto refreshToken(RefreshTokenRequestDto dto);
 }
