@@ -1,9 +1,17 @@
 package uz.akbar.workoutTracker.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /** ExerciseCategory */
+@AllArgsConstructor
+@Getter
 public enum ExerciseCategory {
-    CARDIO,
-    STRENGTH,
-    FLEXIBILITY,
-    BALANCE
+    STRENGTH("Strength training"),
+    CARDIO("Cardiovascular"),
+    FLEXIBILITY("Flexibility"),
+    HIIT("High Intensity Interval Training"),
+    BALANCE("Balance and Stability");
+
+    private final String description;
 }
