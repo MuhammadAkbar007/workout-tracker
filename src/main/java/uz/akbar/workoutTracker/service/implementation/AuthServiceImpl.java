@@ -15,6 +15,7 @@ import uz.akbar.workoutTracker.entity.User;
 import uz.akbar.workoutTracker.enums.RoleType;
 import uz.akbar.workoutTracker.exception.AppBadException;
 import uz.akbar.workoutTracker.exception.RefreshTokenException;
+import uz.akbar.workoutTracker.payload.JwtDto;
 import uz.akbar.workoutTracker.payload.JwtResponseDto;
 import uz.akbar.workoutTracker.payload.LogInDto;
 import uz.akbar.workoutTracker.payload.RefreshTokenRequestDto;
@@ -75,11 +76,15 @@ public class AuthServiceImpl implements AuthService {
         if (!authentication.isAuthenticated())
             throw new AppBadException("User is not authenticated");
 
+        JwtDto accessTokenObject = jwtUtil.generateToken(authentication);
         RefreshToken refreshTokenObject = refreshTokenService.createRefreshToken(dto.getUsername());
-        String refreshToken = refreshTokenObject.getToken();
-        String accessToken = jwtUtil.generateToken(authentication);
 
-        return new JwtResponseDto(accessToken, refreshToken);
+        return JwtResponseDto.builder()
+                .accessToken(accessTokenObject.getToken())
+                .refreshToken(refreshTokenObject.getToken())
+                .accessTokenExpiryTime(accessTokenObject.getExpiryDate())
+                .refreshTokenExpiryTime(refreshTokenObject.getExpiryDate())
+                .build();
     }
 
     @Override
@@ -101,11 +106,15 @@ public class AuthServiceImpl implements AuthService {
         if (!authentication.isAuthenticated())
             throw new AppBadException("User is not authenticated");
 
+        JwtDto accessTokenObject = jwtUtil.generateToken(authentication);
         RefreshToken refreshTokenObject =
                 refreshTokenService.createRefreshToken(user.getUsername());
-        String refreshToken = refreshTokenObject.getToken();
-        String accessToken = jwtUtil.generateToken(authentication);
 
-        return new JwtResponseDto(accessToken, refreshToken);
+        return JwtResponseDto.builder()
+                .accessToken(accessTokenObject.getToken())
+                .refreshToken(refreshTokenObject.getToken())
+                .accessTokenExpiryTime(accessTokenObject.getExpiryDate())
+                .refreshTokenExpiryTime(refreshTokenObject.getExpiryDate())
+                .build();
     }
 }

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 import lombok.Data;
 
-/** UserDto */
+/** RegisterDto */
 @Data
 public class RegisterDto {
 

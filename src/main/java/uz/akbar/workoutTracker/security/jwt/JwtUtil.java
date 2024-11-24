@@ -7,7 +7,10 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import uz.akbar.workoutTracker.payload.JwtDto;
+
 import java.security.SecureRandom;
+import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,18 +28,24 @@ public class JwtUtil {
     // private final String secretKey =
     // "veryLongSecretmazgillattayevlasharaaxmojonjinnijonsurbetbekkiydirhonuxlatdibekloxovdangasabekochkozjonduxovmashaynikmaydagapchishularnioqiganbolsangizgapyoqaniqsizmazgi";
 
-    public String generateToken(Authentication authentication) {
+    public JwtDto generateToken(Authentication authentication) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("username", authentication.getPrincipal());
         extraClaims.put("roles", authentication.getAuthorities());
 
-        return Jwts.builder()
-                .claims(extraClaims)
-                .subject(authentication.getName())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiryTime))
-                .signWith(getSignInKey())
-                .compact();
+        Instant now = Instant.now();
+        Instant expiry = now.plusMillis(expiryTime);
+
+        String token =
+                Jwts.builder()
+                        .claims(extraClaims)
+                        .subject(authentication.getName())
+                        .issuedAt(Date.from(now))
+                        .expiration(Date.from(expiry))
+                        .signWith(getSignInKey())
+                        .compact();
+
+        return new JwtDto(token, expiry);
     }
 
     public String getUsername(String token) {

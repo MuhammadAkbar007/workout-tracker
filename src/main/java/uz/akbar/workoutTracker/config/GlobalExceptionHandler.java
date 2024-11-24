@@ -1,6 +1,9 @@
 package uz.akbar.workoutTracker.config;
 
+import io.jsonwebtoken.ExpiredJwtException;
+
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -54,7 +57,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(RefreshTokenException.class)
     public ResponseEntity<?> handle(RefreshTokenException e) {
-        return ResponseEntity.status(403).body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<?> handle(ExpiredJwtException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token has expired");
     }
 
     @Override
