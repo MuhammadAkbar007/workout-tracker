@@ -40,4 +40,6 @@ Security: Implement JWT authentication to secure the API endpoints.
 
 This project is a great way to practice building a backend system for a real-world application. I will learn how to design a database schema, implement user authentication, and create RESTful API endpoints.
 
-I have finished user authentication, autherization, jwt accessToken and refreshToken so far. I don't know where to start for the next step. Can you help during the next steps?
+I have finished user authentication, autherization, jwt accessToken and refreshToken so far.
+
+I don't know where to start for the next step. Can you help during the next steps?

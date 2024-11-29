@@ -40,7 +40,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @JsonIgnoreProperties("users") // when serializing roles, ignore their users
     @ManyToMany(
             fetch = FetchType.EAGER,
             cascade = {CascadeType.MERGE, CascadeType.REFRESH})
@@ -48,6 +47,7 @@ public class User {
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    @JsonIgnoreProperties("users") // when serializing roles, ignore their users
     private Set<Role> roles = new HashSet<>();
 
     @JsonIgnore

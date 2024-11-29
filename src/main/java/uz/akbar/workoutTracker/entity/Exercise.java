@@ -12,7 +12,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -29,6 +32,9 @@ import java.util.UUID;
 /** Exercise */
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Exercise {
 
@@ -53,6 +59,7 @@ public class Exercise {
     private ExerciseCategory category;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private MuscleGroup muscleGroup;
 
     @CreatedDate
