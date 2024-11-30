@@ -15,14 +15,21 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
+import uz.akbar.workoutTracker.enums.GeneralStatus;
+
 import java.util.Set;
 import java.util.UUID;
 
 /** User */
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "users")
 public class User {
 
@@ -40,6 +47,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    private GeneralStatus status; // ACTIVE, BLOCK
+
     @ManyToMany(
             fetch = FetchType.EAGER,
             cascade = {CascadeType.MERGE, CascadeType.REFRESH})
@@ -48,9 +57,9 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     @JsonIgnoreProperties("users") // when serializing roles, ignore their users
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RefreshToken> refreshTokens = new HashSet<>();
+    private Set<RefreshToken> refreshTokens;
 }

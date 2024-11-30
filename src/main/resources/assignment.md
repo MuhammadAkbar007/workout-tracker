@@ -1,5 +1,35 @@
 # Entity
-### Exercise
+## User
+* id
+* username
+* email
+* password
+* userStatus -> enum
+
+## Role
+* id
+* roleType -> enum
+
+### user_role
+* userId
+* roleId
+
+## RefreshToken
+* id
+* token
+* expiryDate
+* createdAt
+* userId
+
+## Workout
+* workoutStatus (ACTIVE or PENDING) -> enum
+* userId
+* createdAt
+* updatedAt
+* createdBy
+* updatedBy
+
+## Exercise
 * id
 * name
 * description
@@ -12,18 +42,11 @@
 * updatedAt
 * createdBy
 * updatedBy
+* workoutId
 
-### Workout
-* multiple exercises
-* workoutStatus (ACTIVE or PENDING) -> enum
-* createdAt
-* updatedAt
-* createdBy
-* updatedBy
-
-### Comment
+## Comment
 * id
-* text
+* content
 * workoutId
 * createdAt
 * updatedAt
@@ -35,7 +58,7 @@
 > * Users should only be able to access their own workout plans.
 
 # Functionality
-### User
+## User
 - [ ] can sign up
 - [ ] can log in
 - [ ] can log out
