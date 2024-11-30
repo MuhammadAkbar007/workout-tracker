@@ -58,7 +58,7 @@ public class RefreshTokenService {
     }
 
     public RefreshToken verifyRefreshToken(RefreshToken token) {
-        if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
+        if (token.expiryDate().compareTo(Instant.now()) < 0) {
             repository.delete(token);
             throw new AppBadException("Refresh token is expired. Please make a new login..!");
         }
@@ -67,6 +67,6 @@ public class RefreshTokenService {
     }
 
     public void deleteByUser(User user) {
-        userRepository.findById(user.getId()).ifPresent(repository::deleteByUser);
+        userRepository.findById(user.id()).ifPresent(repository::deleteByUser);
     }
 }

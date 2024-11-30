@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import uz.akbar.workoutTracker.enums.RoleType;
 
@@ -23,6 +24,7 @@ import java.util.UUID;
 /** Role */
 @Data
 @Entity(name = "roles")
+@Accessors(fluent = true)
 public class Role {
 
     @Id
@@ -33,9 +35,9 @@ public class Role {
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 
+    // @JsonIgnoreProperties("roles") // when serializing users, ignore their roles
     @ToString.Exclude // Prevents infinite recursion in toString()
     @EqualsAndHashCode.Exclude // Prevents infinite recursion in equals/hashCode
-    // @JsonIgnoreProperties("roles") // when serializing users, ignore their roles
     @JsonIgnore
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;

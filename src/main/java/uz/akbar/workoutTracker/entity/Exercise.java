@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -35,6 +36,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(fluent = true)
 @EntityListeners(AuditingEntityListener.class)
 public class Exercise {
 
@@ -48,12 +50,6 @@ public class Exercise {
     @Column(columnDefinition = "text")
     private String description;
 
-    private int sets;
-
-    private int repetitions;
-
-    private double weight;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ExerciseCategory category;
@@ -61,6 +57,15 @@ public class Exercise {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MuscleGroup muscleGroup;
+
+    private int repetition;
+
+    @Column(nullable = false)
+    private int set;
+
+    private double weight;
+
+    @ManyToOne private Workout workout;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

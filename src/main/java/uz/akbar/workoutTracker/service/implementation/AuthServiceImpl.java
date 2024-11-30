@@ -60,10 +60,16 @@ public class AuthServiceImpl implements AuthService {
                         .password(passwordEncoder.encode(dto.password()))
                         .status(GeneralStatus.ACTIVE)
                         .build();
+
         User saved = repository.save(user);
 
         UserDto userDto =
-                new UserDto(saved.getId(), saved.getUsername(), saved.getEmail(), saved.getRoles());
+                UserDto.builder()
+                        .id(saved.id())
+                        .username(saved.username())
+                        .email(saved.email())
+                        .roles(saved.roles())
+                        .build();
 
         return AppResponse.builder()
                 .success(true)
@@ -90,9 +96,9 @@ public class AuthServiceImpl implements AuthService {
         JwtResponseDto jwtResponseDto =
                 JwtResponseDto.builder()
                         .accessToken(accessTokenObject.token())
-                        .refreshToken(refreshTokenObject.getToken())
+                        .refreshToken(refreshTokenObject.token())
                         .accessTokenExpiryTime(accessTokenObject.expiryDate())
-                        .refreshTokenExpiryTime(refreshTokenObject.getExpiryDate())
+                        .refreshTokenExpiryTime(refreshTokenObject.expiryDate())
                         .build();
 
         return AppResponse.builder()
@@ -115,22 +121,21 @@ public class AuthServiceImpl implements AuthService {
 
         refreshTokenService.verifyRefreshToken(token);
 
-        User user = token.getUser();
+        User user = token.user();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.isAuthenticated())
             throw new AppBadException("User is not authenticated");
 
         JwtDto accessTokenObject = jwtUtil.generateToken(authentication);
-        RefreshToken refreshTokenObject =
-                refreshTokenService.createRefreshToken(user.getUsername());
+        RefreshToken refreshTokenObject = refreshTokenService.createRefreshToken(user.username());
 
         JwtResponseDto jwtResponseDto =
                 JwtResponseDto.builder()
                         .accessToken(accessTokenObject.token())
-                        .refreshToken(refreshTokenObject.getToken())
+                        .refreshToken(refreshTokenObject.token())
                         .accessTokenExpiryTime(accessTokenObject.expiryDate())
-                        .refreshTokenExpiryTime(refreshTokenObject.getExpiryDate())
+                        .refreshTokenExpiryTime(refreshTokenObject.expiryDate())
                         .build();
 
         return AppResponse.builder()

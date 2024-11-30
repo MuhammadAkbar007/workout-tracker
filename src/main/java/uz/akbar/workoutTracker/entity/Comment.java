@@ -1,18 +1,14 @@
 package uz.akbar.workoutTracker.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 
 import lombok.Builder;
 import lombok.Data;
@@ -24,40 +20,26 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import uz.akbar.workoutTracker.enums.WorkoutStatus;
-
 import java.time.Instant;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
-/** Workout */
+/** Comment */
 @Entity
 @Data
 @Builder
 @Accessors(fluent = true)
 @EntityListeners(AuditingEntityListener.class)
-public class Workout {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private WorkoutStatus status;
-
-    @Column(unique = true, nullable = false)
-    private Instant scheduledDateTime;
+    @Column(columnDefinition = "text", nullable = false)
+    private String content;
 
     @ManyToOne(optional = false)
-    private User owner;
-
-    @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Exercise> exercises;
-
-    @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
+    private Workout workout;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

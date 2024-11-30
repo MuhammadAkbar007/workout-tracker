@@ -28,20 +28,20 @@ public class CustomUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> roles = new ArrayList<>();
 
-        user.getRoles().stream()
-                .map(role -> roles.add(new SimpleGrantedAuthority(role.getRoleType().name())));
+        user.roles().stream()
+                .map(role -> roles.add(new SimpleGrantedAuthority(role.roleType().name())));
 
         return roles;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return user.password();
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.username();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return user.getStatus() != GeneralStatus.BLOCK;
+        return user.status() != GeneralStatus.BLOCK;
     }
 
     @Override

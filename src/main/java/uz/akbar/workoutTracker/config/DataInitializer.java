@@ -33,7 +33,7 @@ public class DataInitializer {
                             .orElseGet(
                                     () -> {
                                         Role role = new Role();
-                                        role.setRoleType(RoleType.ROLE_USER);
+                                        role.roleType(RoleType.ROLE_USER);
 
                                         return roleRepository.save(role);
                                     });
@@ -45,7 +45,7 @@ public class DataInitializer {
                             .orElseGet(
                                     () -> {
                                         Role role = new Role();
-                                        role.setRoleType(RoleType.ROLE_ADMIN);
+                                        role.roleType(RoleType.ROLE_ADMIN);
 
                                         return roleRepository.save(role);
                                     });
@@ -56,11 +56,13 @@ public class DataInitializer {
                 roles.add(adminRole);
                 roles.add(userRole);
 
-                User user = new User();
-                user.setEmail("akbarjondev007@gmail.com");
-                user.setPassword(passwordEncoder.encode("root123"));
-                user.setUsername("akbar007");
-                user.setRoles(roles);
+                User user =
+                        User.builder()
+                                .email("akbarjondev007@gmail.com")
+                                .password(passwordEncoder.encode("root123"))
+                                .username("akbar007")
+                                .roles(roles)
+                                .build();
 
                 userRepository.save(user);
             }

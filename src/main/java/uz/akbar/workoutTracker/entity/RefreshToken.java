@@ -12,10 +12,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -24,8 +25,7 @@ import java.util.UUID;
 @Entity
 @Builder
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Accessors(fluent = true)
 public class RefreshToken {
 
     @Id
@@ -35,16 +35,18 @@ public class RefreshToken {
     @Column(unique = true, nullable = false)
     private String token;
 
+    @Column(nullable = false)
+    private Instant expiryDate;
+
+    @Column(nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @ToString.Exclude // Prevents infinite recursion in toString()
+    @EqualsAndHashCode.Exclude // Prevents infinite recursion in equals/hashCode
     @JsonIgnore
     @ManyToOne(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User user;
-
-    @Column(nullable = false)
-    private Instant expiryDate;
-
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt;
 }
