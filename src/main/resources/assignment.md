@@ -59,29 +59,25 @@
 
 # Functionality
 ## System
+
+> [!NOTE]
+> in-progress this task 👇
 - [ ] Write a data seeder to populate database with a list of exercises.
+
 - [x] implement JWT authentication
 - [ ] admin dashboard functionalities
 
 ## User
 - [x] can sign up
 - [x] can log in
-- [ ] can log out [!NOTE] (in-progress)
-
-- [ ] create workout plans > [!WARNING] (only authenticated)
-* Allow users to create workouts composed of multiple exercises.
-
-- [ ] update workout plans > [!WARNING] (only authenticated)
-* Allow users to update workouts and add comments.
-
-- [ ] delete workout plans > [!WARNING] (only authenticated)
-- [ ] schedule workout plans for specific date and times > [!WARNING] (only authenticated)
-
-- [ ] list workouts > [!WARNING] (only authenticated)
-* List active or pending workouts sorted by date and time
-
-- [ ] track his progress > [!WARNING] (only authenticated)
-- [ ] Generate reports on past workouts > [!WARNING] (only authenticated)
+- [ ] can log out [!WARNING] (could not done ❌)
+- [ ] create workout plans: Allow users to create workouts composed of multiple exercises.
+- [ ] update workout plans: Allow users to update workouts and add comments.
+- [ ] delete workout plans
+- [ ] schedule workout plans for specific date and times
+- [ ] list workouts:  List active or pending workouts sorted by date and time
+- [ ] track his progress
+- [ ] Generate reports on past workouts
 
 ```java
 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -91,3 +87,4 @@ Authentication authentication = SecurityContextHolder.getContext().getAuthentica
             throw new AppBadException("No authenticated user found.");
         }
 ```
+

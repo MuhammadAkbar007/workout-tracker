@@ -6,14 +6,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import uz.akbar.workoutTracker.entity.Exercise;
 import uz.akbar.workoutTracker.entity.Role;
 import uz.akbar.workoutTracker.entity.User;
+import uz.akbar.workoutTracker.enums.ExerciseCategory;
 import uz.akbar.workoutTracker.enums.GeneralStatus;
+import uz.akbar.workoutTracker.enums.MuscleGroup;
 import uz.akbar.workoutTracker.enums.RoleType;
+import uz.akbar.workoutTracker.repository.ExerciseRepository;
 import uz.akbar.workoutTracker.repository.RoleRepository;
 import uz.akbar.workoutTracker.repository.UserRepository;
 
+import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /** DataInitializer */
@@ -25,7 +31,8 @@ public class DataInitializer {
     public CommandLineRunner initData(
             UserRepository userRepository,
             RoleRepository roleRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            ExerciseRepository exerciseRepository) {
         return args -> {
             // create userRole if doesnt exist
             Role userRole =
@@ -67,6 +74,52 @@ public class DataInitializer {
                                 .build();
 
                 userRepository.save(user);
+
+                if (exerciseRepository.count() <= 0) {
+                    Exercise running =
+                            Exercise.builder()
+                                    .name("running")
+                                    .description("Running 1 kilometers.")
+                                    .category(ExerciseCategory.CARDIO)
+                                    .muscleGroup(MuscleGroup.LEGS)
+                                    .set(1)
+                                    .createdAt(Instant.now())
+                                    .updatedAt(Instant.now())
+                                    .createdBy(user)
+                                    .lastModifiedBy(user)
+                                    .build();
+
+                    Exercise benchPress =
+                            Exercise.builder()
+                                    .name("benchPress")
+                                    .description("Bench press exercise for chest.")
+                                    .category(ExerciseCategory.STRENGTH)
+                                    .muscleGroup(MuscleGroup.CHEST)
+                                    .set(3)
+                                    .repetition(7)
+                                    .weight(90.0)
+                                    .createdAt(Instant.now())
+                                    .updatedAt(Instant.now())
+                                    .createdBy(user)
+                                    .lastModifiedBy(user)
+                                    .build();
+
+                    Exercise catCowStretch =
+                            Exercise.builder()
+                                    .name("catCowStretch")
+                                    .description(
+                                            "Cat-cow stretching exercise for flexibility of back.")
+                                    .category(ExerciseCategory.FLEXIBILITY)
+                                    .muscleGroup(MuscleGroup.BACK)
+                                    .set(3)
+                                    .createdAt(Instant.now())
+                                    .updatedAt(Instant.now())
+                                    .createdBy(user)
+                                    .lastModifiedBy(user)
+                                    .build();
+
+                    exerciseRepository.saveAll(List.of(running, benchPress, catCowStretch));
+                }
             }
         };
     }
