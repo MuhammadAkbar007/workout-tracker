@@ -17,9 +17,11 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
@@ -29,6 +31,8 @@ import java.util.Set;
 import java.util.UUID;
 
 /** User */
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Builder
 @Accessors(fluent = true)

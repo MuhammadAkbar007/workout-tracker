@@ -23,13 +23,14 @@ import uz.akbar.workoutTracker.payload.LogInDto;
 import uz.akbar.workoutTracker.payload.RefreshTokenRequestDto;
 import uz.akbar.workoutTracker.payload.RegisterDto;
 import uz.akbar.workoutTracker.payload.UserDto;
+import uz.akbar.workoutTracker.repository.RefreshTokenRepository;
 import uz.akbar.workoutTracker.repository.RoleRepository;
 import uz.akbar.workoutTracker.repository.UserRepository;
-import uz.akbar.workoutTracker.security.jwt.JwtUtil;
+import uz.akbar.workoutTracker.security.CustomUserDetails;
+import uz.akbar.workoutTracker.security.jwt.JwtProvider;
 import uz.akbar.workoutTracker.service.AuthService;
-import uz.akbar.workoutTracker.service.RefreshTokenService;
 
-import java.util.Optional;
+import java.time.Instant;
 import java.util.Set;
 
 /** AuthServiceImpl */
@@ -40,8 +41,8 @@ public class AuthServiceImpl implements AuthService {
     @Autowired private RoleRepository roleRepository;
     @Autowired private BCryptPasswordEncoder passwordEncoder;
     @Autowired private AuthenticationManager authenticationManager;
-    @Autowired private JwtUtil jwtUtil;
-    @Autowired private RefreshTokenService refreshTokenService;
+    @Autowired private JwtProvider jwtProvider;
+    @Autowired private RefreshTokenRepository refreshTokenRepository;
 
     @Override
     @Transactional
@@ -49,8 +50,10 @@ public class AuthServiceImpl implements AuthService {
         if (repository.existsByEmailOrUsername(dto.email(), dto.username()))
             throw new AppBadException("User already exists");
 
-        Optional<Role> optionalRole = roleRepository.findByRoleType(RoleType.ROLE_USER);
-        Role role = optionalRole.orElseThrow(() -> new RuntimeException("Role User is not found"));
+        Role role =
+                roleRepository
+                        .findByRoleType(RoleType.ROLE_USER)
+                        .orElseThrow(() -> new RuntimeException("Role User is not found"));
 
         User user =
                 User.builder()
@@ -80,25 +83,25 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AppResponse logIn(LogInDto dto) {
-
         Authentication authentication =
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(dto.username(), dto.password()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        if (!authentication.isAuthenticated())
-            throw new AppBadException("User is not authenticated");
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = userDetails.getUser();
 
-        JwtDto accessTokenObject = jwtUtil.generateToken(authentication);
-        RefreshToken refreshTokenObject = refreshTokenService.createRefreshToken(dto.username());
+        JwtDto accessTokenDto = jwtProvider.generateAccessToken(authentication);
+        JwtDto refreshTokenDto = jwtProvider.generateRefreshToken(authentication);
 
         JwtResponseDto jwtResponseDto =
                 JwtResponseDto.builder()
-                        .accessToken(accessTokenObject.token())
-                        .refreshToken(refreshTokenObject.token())
-                        .accessTokenExpiryTime(accessTokenObject.expiryDate())
-                        .refreshTokenExpiryTime(refreshTokenObject.expiryDate())
+                        .username(user.username())
+                        .accessToken(accessTokenDto.token())
+                        .refreshToken(refreshTokenDto.token())
+                        .accessTokenExpiryTime(accessTokenDto.expiryDate())
+                        .refreshTokenExpiryTime(refreshTokenDto.expiryDate())
                         .build();
 
         return AppResponse.builder()
@@ -109,33 +112,47 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public AppResponse refreshToken(RefreshTokenRequestDto dto) {
+        String refreshToken = dto.refreshToken();
 
-        RefreshToken token =
-                refreshTokenService
-                        .findByToken(dto.refreshToken())
+        if (!jwtProvider.validateToken(refreshToken)) {
+            throw new RefreshTokenException("Invalid refresh token");
+        }
+
+        RefreshToken storedToken =
+                refreshTokenRepository
+                        .findByToken(refreshToken)
                         .orElseThrow(
                                 () ->
                                         new RefreshTokenException(
                                                 "Refresh token is not in database!"));
 
-        refreshTokenService.verifyRefreshToken(token);
+        if (storedToken.expiryDate().isBefore(Instant.now())) {
+            refreshTokenRepository.delete(storedToken);
+            throw new RefreshTokenException("Refresh token has expired");
+        }
 
-        User user = token.user();
+        String username = jwtProvider.getUsernameFromToken(refreshToken);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.isAuthenticated())
-            throw new AppBadException("User is not authenticated");
+        CustomUserDetails userDetails =
+                (CustomUserDetails)
+                        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        JwtDto accessTokenObject = jwtUtil.generateToken(authentication);
-        RefreshToken refreshTokenObject = refreshTokenService.createRefreshToken(user.username());
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+
+        JwtDto accessTokenDto = jwtProvider.generateAccessToken(authentication);
+        JwtDto refreshTokenDto = jwtProvider.generateRefreshToken(authentication);
 
         JwtResponseDto jwtResponseDto =
                 JwtResponseDto.builder()
-                        .accessToken(accessTokenObject.token())
-                        .refreshToken(refreshTokenObject.token())
-                        .accessTokenExpiryTime(accessTokenObject.expiryDate())
-                        .refreshTokenExpiryTime(refreshTokenObject.expiryDate())
+                        .username(username)
+                        .accessToken(accessTokenDto.token())
+                        .refreshToken(refreshTokenDto.token())
+                        .accessTokenExpiryTime(accessTokenDto.expiryDate())
+                        .refreshTokenExpiryTime(refreshTokenDto.expiryDate())
                         .build();
 
         return AppResponse.builder()
@@ -143,5 +160,27 @@ public class AuthServiceImpl implements AuthService {
                 .message("Tokens successfully regenerated")
                 .data(jwtResponseDto)
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public AppResponse logout() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null
+                && authentication.isAuthenticated()
+                && authentication.getPrincipal() != "anonymousUser"
+                && authentication.getPrincipal() instanceof CustomUserDetails) {
+
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            User user = userDetails.getUser();
+
+            refreshTokenRepository.deleteByUser(user);
+
+            SecurityContextHolder.clearContext();
+        }
+
+        return AppResponse.builder().success(true).message("User successfully logged out").build();
     }
 }

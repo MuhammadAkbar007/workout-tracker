@@ -34,3 +34,7 @@ Content-Type: application/json
 {
 	"refreshToken": "fe76c490-9f6f-4c1d-b166-8d9969728347"
 }
+
+### LogOut user
+POST http://localhost:8080/api/v1/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJha2JhcjAwNyIsInVzZXJJZCI6ImE4ZTZiNzJlLTQyYjYtNDU4Mi1iYzg5LWEyYWRmNTBiY2VjZiIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX1VTRVIifSx7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifV0sImlhdCI6MTczMzE0Mjc5MiwiZXhwIjoxNzMzMTQ2MzkyfQ.sk_Hc5myrRRRok4pUvrFrluHVuzOHkn1ljW2wavx6mypRHEXh04cUoeD3MrZ08EtqefCqR8D08DvSTrzpK_30Q

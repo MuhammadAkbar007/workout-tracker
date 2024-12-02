@@ -14,13 +14,6 @@
 * userId
 * roleId
 
-## RefreshToken
-* id
-* token
-* expiryDate
-* createdAt
-* userId
-
 ## Workout
 * workoutStatus (ACTIVE or PENDING) -> enum
 * userId
@@ -53,15 +46,28 @@
 * createdBy
 * updatedBy
 
+## RefreshToken
+* id
+* token
+* expiryDate
+* createdAt
+* userId
+
 > [!NOTE]
 > * Exercises will be used to create workout plans.
 > * Users should only be able to access their own workout plans.
 
 # Functionality
+## System
+- [ ] Write a data seeder to populate database with a list of exercises.
+- [x] implement JWT authentication
+- [ ] admin dashboard functionalities
+
 ## User
-- [ ] can sign up
-- [ ] can log in
-- [ ] can log out
+- [x] can sign up
+- [x] can log in
+- [ ] can log out [!NOTE] (in-progress)
+
 - [ ] create workout plans > [!WARNING] (only authenticated)
 * Allow users to create workouts composed of multiple exercises.
 
@@ -70,14 +76,18 @@
 
 - [ ] delete workout plans > [!WARNING] (only authenticated)
 - [ ] schedule workout plans for specific date and times > [!WARNING] (only authenticated)
+
 - [ ] list workouts > [!WARNING] (only authenticated)
 * List active or pending workouts sorted by date and time
 
 - [ ] track his progress > [!WARNING] (only authenticated)
 - [ ] Generate reports on past workouts > [!WARNING] (only authenticated)
 
-# TODO
-- [ ] Write a data seeder to populate database with a list of exercises.
-- [ ] JWT authentication
-- [ ] CRUD for workouts
-
+```java
+Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null
+                || !authentication.isAuthenticated()
+                || authentication.getPrincipal() == "anonymousUser") {
+            throw new AppBadException("No authenticated user found.");
+        }
+```

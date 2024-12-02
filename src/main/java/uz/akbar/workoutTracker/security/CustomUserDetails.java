@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import uz.akbar.workoutTracker.entity.User;
 import uz.akbar.workoutTracker.enums.GeneralStatus;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /** CustomUserDetails */
 public class CustomUserDetails implements UserDetails {
@@ -24,14 +24,15 @@ public class CustomUserDetails implements UserDetails {
         return user;
     }
 
+    public UUID getUserId() {
+        return user.id();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> roles = new ArrayList<>();
-
-        user.roles().stream()
-                .map(role -> roles.add(new SimpleGrantedAuthority(role.roleType().name())));
-
-        return roles;
+        return user.roles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.roleType().name()))
+                .collect(Collectors.toList());
     }
 
     @Override

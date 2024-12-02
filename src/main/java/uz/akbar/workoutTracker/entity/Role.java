@@ -11,8 +11,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
@@ -22,6 +24,8 @@ import java.util.Set;
 import java.util.UUID;
 
 /** Role */
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Entity(name = "roles")
 @Accessors(fluent = true)

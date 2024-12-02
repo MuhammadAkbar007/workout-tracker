@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import uz.akbar.workoutTracker.entity.Role;
 import uz.akbar.workoutTracker.entity.User;
+import uz.akbar.workoutTracker.enums.GeneralStatus;
 import uz.akbar.workoutTracker.enums.RoleType;
 import uz.akbar.workoutTracker.repository.RoleRepository;
 import uz.akbar.workoutTracker.repository.UserRepository;
@@ -61,6 +62,7 @@ public class DataInitializer {
                                 .email("akbarjondev007@gmail.com")
                                 .password(passwordEncoder.encode("root123"))
                                 .username("akbar007")
+                                .status(GeneralStatus.ACTIVE)
                                 .roles(roles)
                                 .build();
 

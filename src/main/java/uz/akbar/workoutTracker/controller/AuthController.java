@@ -39,4 +39,11 @@ public class AuthController {
         AppResponse response = service.refreshToken(dto);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        AppResponse response = service.logout();
+        return ResponseEntity.status(200).body(response);
+        // return ResponseEntity.status(204).body(response);
+    }
 }

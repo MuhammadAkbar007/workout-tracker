@@ -1,5 +1,7 @@
 package uz.akbar.workoutTracker.security;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,9 +13,10 @@ import uz.akbar.workoutTracker.repository.UserRepository;
 
 /** CustomUserDetailsService */
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired private UserRepository userRepository;
+    @Autowired private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -23,9 +26,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                         .orElseThrow(
                                 () ->
                                         new UsernameNotFoundException(
-                                                "user by " + username + " username not found"));
+                                                "User not found with username: " + username));
 
-        CustomUserDetails userDetails = new CustomUserDetails(user);
-        return userDetails;
+        return new CustomUserDetails(user);
     }
 }

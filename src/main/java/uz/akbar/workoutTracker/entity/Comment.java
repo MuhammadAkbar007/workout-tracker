@@ -10,8 +10,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import org.springframework.data.annotation.CreatedBy;
@@ -26,6 +28,8 @@ import java.util.UUID;
 /** Comment */
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Accessors(fluent = true)
 @EntityListeners(AuditingEntityListener.class)
