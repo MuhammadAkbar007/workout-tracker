@@ -65,7 +65,7 @@ public class Exercise {
 
     private double weight;
 
-    @ManyToOne private Workout workout;
+    @ManyToOne private WorkoutPlan workoutPlan;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

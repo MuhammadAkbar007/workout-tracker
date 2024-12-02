@@ -67,6 +67,9 @@ public class User {
     @JsonIgnoreProperties("users") // when serializing roles, ignore their users
     private Set<Role> roles;
 
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<WorkoutPlan> workoutPlans;
+
     @ToString.Exclude // Prevents infinite recursion in toString()
     @EqualsAndHashCode.Exclude // Prevents infinite recursion in equals/hashCode
     @JsonIgnore

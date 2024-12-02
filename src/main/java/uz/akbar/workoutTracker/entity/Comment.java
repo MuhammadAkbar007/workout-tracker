@@ -43,7 +43,7 @@ public class Comment {
     private String content;
 
     @ManyToOne(optional = false)
-    private Workout workout;
+    private WorkoutPlan workoutPlan;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

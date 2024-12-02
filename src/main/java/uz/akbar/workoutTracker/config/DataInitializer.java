@@ -97,7 +97,7 @@ public class DataInitializer {
                                     .muscleGroup(MuscleGroup.CHEST)
                                     .set(3)
                                     .repetition(7)
-                                    .weight(90.0)
+                                    .weight(90.5)
                                     .createdAt(Instant.now())
                                     .updatedAt(Instant.now())
                                     .createdBy(user)

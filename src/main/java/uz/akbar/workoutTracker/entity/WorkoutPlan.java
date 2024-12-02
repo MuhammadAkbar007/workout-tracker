@@ -41,7 +41,7 @@ import java.util.UUID;
 @Builder
 @Accessors(fluent = true)
 @EntityListeners(AuditingEntityListener.class)
-public class Workout {
+public class WorkoutPlan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -57,10 +57,10 @@ public class Workout {
     @ManyToOne(optional = false)
     private User owner;
 
-    @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "workoutPlan", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Exercise> exercises;
 
-    @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "workoutPlan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
     @CreatedDate
