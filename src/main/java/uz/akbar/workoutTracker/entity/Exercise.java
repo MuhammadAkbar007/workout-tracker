@@ -1,5 +1,6 @@
 package uz.akbar.workoutTracker.entity;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -10,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
@@ -28,6 +30,7 @@ import uz.akbar.workoutTracker.enums.ExerciseCategory;
 import uz.akbar.workoutTracker.enums.MuscleGroup;
 
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 
 /** Exercise */
@@ -65,7 +68,8 @@ public class Exercise {
 
     private double weight;
 
-    @ManyToOne private WorkoutPlan workoutPlan;
+    @ManyToMany(mappedBy = "exercises")
+    private Set<WorkoutPlan> workoutPlans;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

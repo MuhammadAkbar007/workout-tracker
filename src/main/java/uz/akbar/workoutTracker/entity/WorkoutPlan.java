@@ -1,5 +1,6 @@
 package uz.akbar.workoutTracker.entity;
 
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
@@ -33,7 +36,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-/** Workout */
+/** WorkoutPlan */
 @Entity
 @Data
 @AllArgsConstructor
@@ -49,7 +52,7 @@ public class WorkoutPlan {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private WorkoutStatus status;
+    private WorkoutStatus status; // ACTIVE or PENDING
 
     @Column(unique = true, nullable = false)
     private Instant scheduledDateTime;
@@ -57,7 +60,14 @@ public class WorkoutPlan {
     @ManyToOne(optional = false)
     private User owner;
 
-    @OneToMany(mappedBy = "workoutPlan", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(
+            fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "workout_exercise",
+            joinColumns = @JoinColumn(name = "workout_plan_id"),
+            inverseJoinColumns = @JoinColumn(name = "exercise_id"))
+    @Column(nullable = false)
     private Set<Exercise> exercises;
 
     @OneToMany(mappedBy = "workoutPlan", cascade = CascadeType.ALL, orphanRemoval = true)
