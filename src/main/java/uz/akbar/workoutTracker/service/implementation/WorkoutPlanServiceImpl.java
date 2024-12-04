@@ -1,6 +1,10 @@
 package uz.akbar.workoutTracker.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,6 +96,34 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
                 .success(true)
                 .message("Workout plan successfully created")
                 .data(responseDto)
+                .build();
+    }
+
+    // get user's all workoutPlans
+    @Override
+    public AppResponse getAll(UUID userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
+
+        Page<WorkoutPlan> allWorkoutPlans = repository.findByOwnerId(userId, pageable);
+
+        return AppResponse.builder()
+                .success(true)
+                .message(size + " workout plans of " + page + "-page")
+                .data(allWorkoutPlans)
+                .build();
+    }
+
+    // get all users' all workoutPlans for only admins
+    @Override
+    public AppResponse getAllForAdmins(int page, int size) {
+        Page<WorkoutPlan> allWorkoutPlans =
+                repository.findAll(
+                        PageRequest.of(page - 1, size, Sort.by("createdAt").descending()));
+
+        return AppResponse.builder()
+                .success(true)
+                .message(size + " workout plans of " + page + "-page")
+                .data(allWorkoutPlans)
                 .build();
     }
 }

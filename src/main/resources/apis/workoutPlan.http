@@ -1,4 +1,4 @@
-### LogIn user & get jwt access & refresh token
+### ADMIN login for tokens
 POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
@@ -7,16 +7,33 @@ Content-Type: application/json
 	"password": "root123"
 }
 
+### USER login for tokens
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+	"username": "fotismenos007",
+	"password": "root123"
+}
+
 ### Create
 POST http://localhost:8080/api/v1/workoutplan
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJha2JhcjAwNyIsInVzZXJJZCI6ImU4YmU3ZWE0LTBjOGMtNDdiZC04YWUxLWJlZmQ0NDRmNzg3NCIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX1VTRVIifSx7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifV0sImlhdCI6MTczMzI0MTAyNCwiZXhwIjoxNzMzMjQ0NjI0fQ.GWHb9IzwUD_FOmZseFYKiH-jJfcBF7ZWt5VBZpUxOyIUAdpNIBlxLO_-VEQKtMRHM7UTa05vwcNM-j76rwIRwA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiMTI0MmUyZjctNmQ2My00NmM0LThlNGQtMzYzYTczN2I0MzNkIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNzMzMzI5ODM5LCJleHAiOjE3MzMzMzM0Mzl9.F22nJMRmBpSA3bmkzo0duuk_rLBmFy9WCoVGqMXMpzZtxABl3PXi_yCubrEtlHS2wbVDpqlj80o0-NRKDB6xfA
 Content-Type: application/json
 
 {
 	"scheduledDateTime": "2025-11-30T14:30:00.000+0500",
 	"exerciseIds": [
-		"d18a9c24-e311-4bc5-83ee-a74132b017c5",
-		"438ed490-548a-4cc8-bc89-dbe37ae66060",
-		"763944d1-a759-4317-99ad-40e78e9a0901"
+		"f825f51b-b880-4eee-ac23-247dd12def77",
+		"c5329046-39d0-43eb-8cbe-e91bcf4ae07f",
+		"5f122cb4-cbdc-4a0a-a1c0-d059d1224bd1"
 	]
 }
+
+### All users' workoutplans for only admins (pagination default page = 1 & size = 10)
+GET http://localhost:8080/api/v1/workoutplan
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJha2JhcjAwNyIsInVzZXJJZCI6IjFiZTgyMDM1LWQ5MTItNDJmMC1iZGEwLTYyNWYwOWYwNTFlZSIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX1VTRVIifSx7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifV0sImlhdCI6MTczMzMyOTczNSwiZXhwIjoxNzMzMzMzMzM1fQ.10qmTqLxZUjhyga6l6XJajkMw_8pjWb9lXcuARxseqE7KbB-LfNfTSqq3IDBYgzVRussP5D0xCeiKw5PwfIfxg
+
+### User's all workoutplans (pagination default page = 1 & size = 10)
+GET http://localhost:8080/api/v1/workoutplan/mine
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJha2JhcjAwNyIsInVzZXJJZCI6ImU4YmU3ZWE0LTBjOGMtNDdiZC04YWUxLWJlZmQ0NDRmNzg3NCIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX1VTRVIifSx7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifV0sImlhdCI6MTczMzI0MTAyNCwiZXhwIjoxNzMzMjQ0NjI0fQ.GWHb9IzwUD_FOmZseFYKiH-jJfcBF7ZWt5VBZpUxOyIUAdpNIBlxLO_-VEQKtMRHM7UTa05vwcNM-j76rwIRwA

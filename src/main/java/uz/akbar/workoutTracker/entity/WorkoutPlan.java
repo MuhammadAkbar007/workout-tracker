@@ -1,6 +1,5 @@
 package uz.akbar.workoutTracker.entity;
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +15,8 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,6 +45,10 @@ import java.util.UUID;
 @Builder
 @Accessors(fluent = true)
 @EntityListeners(AuditingEntityListener.class)
+@Table(
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = {"scheduled_date_time", "owner_id"})
+        }) // scheduledDateTime is unique for the owner
 public class WorkoutPlan {
 
     @Id
@@ -54,10 +59,11 @@ public class WorkoutPlan {
     @Enumerated(EnumType.STRING)
     private WorkoutStatus status; // ACTIVE or PENDING
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private Instant scheduledDateTime;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "owner_id")
     private User owner;
 
     @ManyToMany(

@@ -29,7 +29,7 @@ import java.util.Arrays;
 /** SecurityConfig */
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
