@@ -14,5 +14,5 @@ public interface AuthService {
 
     AppResponse refreshToken(RefreshTokenRequestDto dto);
 
-    AppResponse logout();
+    void logout(RefreshTokenRequestDto dto);
 }

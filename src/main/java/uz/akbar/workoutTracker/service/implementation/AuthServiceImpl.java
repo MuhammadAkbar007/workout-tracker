@@ -22,6 +22,7 @@ import uz.akbar.workoutTracker.payload.JwtResponseDto;
 import uz.akbar.workoutTracker.payload.LogInDto;
 import uz.akbar.workoutTracker.payload.RefreshTokenRequestDto;
 import uz.akbar.workoutTracker.payload.RegisterDto;
+import uz.akbar.workoutTracker.payload.RoleDto;
 import uz.akbar.workoutTracker.payload.UserDto;
 import uz.akbar.workoutTracker.repository.RefreshTokenRepository;
 import uz.akbar.workoutTracker.repository.RoleRepository;
@@ -32,6 +33,7 @@ import uz.akbar.workoutTracker.service.AuthService;
 
 import java.time.Instant;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /** AuthServiceImpl */
 @Service
@@ -66,12 +68,22 @@ public class AuthServiceImpl implements AuthService {
 
         User saved = repository.save(user);
 
+        Set<RoleDto> roleDtos =
+                saved.roles().stream()
+                        .map(
+                                savedRole ->
+                                        RoleDto.builder()
+                                                .id(savedRole.id())
+                                                .roleType(savedRole.roleType())
+                                                .build())
+                        .collect(Collectors.toSet());
+
         UserDto userDto =
                 UserDto.builder()
                         .id(saved.id())
                         .username(saved.username())
                         .email(saved.email())
-                        .roles(saved.roles())
+                        .roles(roleDtos)
                         .build();
 
         return AppResponse.builder()
@@ -164,23 +176,27 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public AppResponse logout() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public void logout(RefreshTokenRequestDto dto) {
+        String refreshToken = dto.refreshToken();
 
-        if (authentication != null
-                && authentication.isAuthenticated()
-                && authentication.getPrincipal() != "anonymousUser"
-                && authentication.getPrincipal() instanceof CustomUserDetails) {
-
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-            User user = userDetails.getUser();
-
-            refreshTokenRepository.deleteByUser(user);
-
-            SecurityContextHolder.clearContext();
+        if (!jwtProvider.validateToken(refreshToken)) {
+            throw new RefreshTokenException("Invalid refresh token");
         }
 
-        return AppResponse.builder().success(true).message("User successfully logged out").build();
+        RefreshToken storedToken =
+                refreshTokenRepository
+                        .findByToken(refreshToken)
+                        .orElseThrow(
+                                () ->
+                                        new RefreshTokenException(
+                                                "Refresh token is not in database!"));
+
+        if (storedToken.expiryDate().isBefore(Instant.now())) {
+            refreshTokenRepository.delete(storedToken);
+            throw new RefreshTokenException("Refresh token has expired");
+        }
+
+        refreshTokenRepository.delete(storedToken);
+        SecurityContextHolder.clearContext();
     }
 }

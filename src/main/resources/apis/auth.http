@@ -3,7 +3,7 @@ POST http://localhost:8080/api/v1/auth/register
 Content-Type: application/json
 
 {
-	"username": "fotismenos",
+	"username": "fotismenos007",
 	"email": "fotismenos007@mail.ru",
 	"password": "root123"
 }
@@ -23,7 +23,7 @@ POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
 {
-	"username": "akbar007",
+	"username": "fotismenos007",
 	"password": "root123"
 }
 
@@ -37,4 +37,9 @@ Content-Type: application/json
 
 ### LogOut user
 POST http://localhost:8080/api/v1/auth/logout
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJha2JhcjAwNyIsInVzZXJJZCI6ImE4ZTZiNzJlLTQyYjYtNDU4Mi1iYzg5LWEyYWRmNTBiY2VjZiIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX1VTRVIifSx7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifV0sImlhdCI6MTczMzE0Mjc5MiwiZXhwIjoxNzMzMTQ2MzkyfQ.sk_Hc5myrRRRok4pUvrFrluHVuzOHkn1ljW2wavx6mypRHEXh04cUoeD3MrZ08EtqefCqR8D08DvSTrzpK_30Q
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiODY2NTA2NTUtM2JkNi00MTdhLWE3NzgtMzEwOThkYjNlYzZkIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNzMzMjg0MDU3LCJleHAiOjE3MzMyODc2NTd9.g_A27WOMyMnrbdfohY0-YAgnoFiDsbrnNXKsjWTXu8MU1ZNnkUN09fHK8JNOgW8ISI3_r4QrjowFqRL64fjm9A
+Content-Type: application/json
+
+{
+	"refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiODY2NTA2NTUtM2JkNi00MTdhLWE3NzgtMzEwOThkYjNlYzZkIiwiaWF0IjoxNzMzMjg0MDU3LCJleHAiOjE3MzM4ODg4NTd9.ApzOxMjZ2cu0iXtpEnogbeuXn0tqZWPmKTQPRaQ9G3c3yoQ2-kWA0Ct9OE0CpWiD4Va6jU4PkC6D72w95yOFhw"
+}

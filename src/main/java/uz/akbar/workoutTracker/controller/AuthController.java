@@ -3,6 +3,7 @@ package uz.akbar.workoutTracker.controller;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,9 +42,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
-        AppResponse response = service.logout();
-        return ResponseEntity.status(200).body(response);
-        // return ResponseEntity.status(204).body(response);
+    public ResponseEntity<?> logout(@Valid @RequestBody RefreshTokenRequestDto dto) {
+        service.logout(dto);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

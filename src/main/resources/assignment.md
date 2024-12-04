@@ -66,7 +66,7 @@
 ## User
 - [x] can sign up
 - [x] can log in
-- [ ] can log out [!WARNING] (could not done ❌)
+- [x] can log out
 
 > [!NOTE]
 > in-progress this task 👇

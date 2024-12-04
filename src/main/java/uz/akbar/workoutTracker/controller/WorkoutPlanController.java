@@ -26,6 +26,7 @@ public class WorkoutPlanController {
     public ResponseEntity<?> create(
             @Valid @RequestBody WorkoutPlanDto dto,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
+
         AppResponse response = service.create(dto, userDetails.getUser());
         return ResponseEntity.status(201).body(response);
     }
