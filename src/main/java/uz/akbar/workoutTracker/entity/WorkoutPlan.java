@@ -21,7 +21,9 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import org.springframework.data.annotation.CreatedBy;
@@ -42,6 +44,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 @Builder
 @Accessors(fluent = true)
 @EntityListeners(AuditingEntityListener.class)
@@ -74,6 +77,7 @@ public class WorkoutPlan {
             joinColumns = @JoinColumn(name = "workout_plan_id"),
             inverseJoinColumns = @JoinColumn(name = "exercise_id"))
     @Column(nullable = false)
+    @ToString.Exclude
     private Set<Exercise> exercises;
 
     @OneToMany(mappedBy = "workoutPlan", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -87,11 +91,13 @@ public class WorkoutPlan {
     @Column(nullable = false)
     private Instant updatedAt;
 
+    @ToString.Exclude
     @CreatedBy
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by_user_id", nullable = false, updatable = false)
     private User createdBy;
 
+    @ToString.Exclude
     @LastModifiedBy
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_modified_by_user_id", nullable = false)

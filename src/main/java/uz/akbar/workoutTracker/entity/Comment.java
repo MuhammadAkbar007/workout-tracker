@@ -13,7 +13,9 @@ import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import org.springframework.data.annotation.CreatedBy;
@@ -27,6 +29,7 @@ import java.util.UUID;
 
 /** Comment */
 @Entity
+@EqualsAndHashCode(of = "id")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,6 +45,7 @@ public class Comment {
     @Column(columnDefinition = "text", nullable = false)
     private String content;
 
+    @ToString.Exclude
     @ManyToOne(optional = false)
     private WorkoutPlan workoutPlan;
 
@@ -53,11 +57,13 @@ public class Comment {
     @Column(nullable = false)
     private Instant updatedAt;
 
+    @ToString.Exclude
     @CreatedBy
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by_user_id", nullable = false, updatable = false)
     private User createdBy;
 
+    @ToString.Exclude
     @LastModifiedBy
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_modified_by_user_id", nullable = false)

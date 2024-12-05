@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /** User */
+@EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -67,11 +68,11 @@ public class User {
     @JsonIgnoreProperties("users") // when serializing roles, ignore their users
     private Set<Role> roles;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<WorkoutPlan> workoutPlans;
 
-    @ToString.Exclude // Prevents infinite recursion in toString()
-    @EqualsAndHashCode.Exclude // Prevents infinite recursion in equals/hashCode
+    @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RefreshToken> refreshTokens;

@@ -27,6 +27,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(of = "id")
 @Entity(name = "roles")
 @Accessors(fluent = true)
 public class Role {
@@ -40,9 +41,8 @@ public class Role {
     private RoleType roleType;
 
     // @JsonIgnoreProperties("roles") // when serializing users, ignore their roles
-    @ToString.Exclude // Prevents infinite recursion in toString()
-    @EqualsAndHashCode.Exclude // Prevents infinite recursion in equals/hashCode
     @JsonIgnore
+    @ToString.Exclude
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 }

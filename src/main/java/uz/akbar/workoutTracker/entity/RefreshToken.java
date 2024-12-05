@@ -29,6 +29,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(of = "id")
 @Accessors(fluent = true)
 public class RefreshToken {
 
@@ -45,8 +46,7 @@ public class RefreshToken {
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
-    @ToString.Exclude // Prevents infinite recursion in toString()
-    @EqualsAndHashCode.Exclude // Prevents infinite recursion in equals/hashCode
+    @ToString.Exclude
     @JsonIgnore
     @ManyToOne(
             fetch = FetchType.LAZY,

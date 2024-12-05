@@ -108,7 +108,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
         return AppResponse.builder()
                 .success(true)
-                .message(size + " workout plans of " + page + "-page")
+                .message("Workout plans of page " + page)
                 .data(allWorkoutPlans)
                 .build();
     }
@@ -122,7 +122,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
         return AppResponse.builder()
                 .success(true)
-                .message(size + " workout plans of " + page + "-page")
+                .message("Workout plans of page " + page)
                 .data(allWorkoutPlans)
                 .build();
     }

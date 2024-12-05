@@ -1,6 +1,5 @@
 package uz.akbar.workoutTracker.entity;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -17,7 +16,9 @@ import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import org.springframework.data.annotation.CreatedBy;
@@ -39,6 +40,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 @Accessors(fluent = true)
 @EntityListeners(AuditingEntityListener.class)
 public class Exercise {
@@ -68,6 +70,7 @@ public class Exercise {
 
     private double weight;
 
+    @ToString.Exclude
     @ManyToMany(mappedBy = "exercises")
     private Set<WorkoutPlan> workoutPlans;
 
@@ -79,11 +82,13 @@ public class Exercise {
     @Column(nullable = false)
     private Instant updatedAt;
 
+    @ToString.Exclude
     @CreatedBy
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by_user_id", nullable = false, updatable = false)
     private User createdBy;
 
+    @ToString.Exclude
     @LastModifiedBy
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_modified_by_user_id", nullable = false)
