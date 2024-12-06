@@ -25,6 +25,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /** WorkoutPlanServiceImpl */
 @Service
@@ -106,10 +107,49 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
         Page<WorkoutPlan> allWorkoutPlans = repository.findByOwnerId(userId, pageable);
 
+        Page<WorkoutPlanResponseDto> response =
+                allWorkoutPlans.map(
+                        workoutPlan ->
+                                WorkoutPlanResponseDto.builder()
+                                        .id(workoutPlan.id())
+                                        .status(workoutPlan.status())
+                                        .scheduledDateTime(workoutPlan.scheduledDateTime())
+                                        .ownerId(workoutPlan.owner().id())
+                                        .exercises(
+                                                workoutPlan.exercises().stream()
+                                                        .map(
+                                                                exercise ->
+                                                                        ExerciseResponseDto
+                                                                                .builder()
+                                                                                .id(exercise.id())
+                                                                                .name(
+                                                                                        exercise
+                                                                                                .name())
+                                                                                .description(
+                                                                                        exercise
+                                                                                                .description())
+                                                                                .category(
+                                                                                        exercise
+                                                                                                .category())
+                                                                                .muscleGroup(
+                                                                                        exercise
+                                                                                                .muscleGroup())
+                                                                                .repetition(
+                                                                                        exercise
+                                                                                                .repetition())
+                                                                                .set(exercise.set())
+                                                                                .weight(
+                                                                                        exercise
+                                                                                                .weight())
+                                                                                .build())
+                                                        .collect(Collectors.toSet()))
+                                        .createdAt(workoutPlan.createdAt())
+                                        .build());
+
         return AppResponse.builder()
                 .success(true)
                 .message("Workout plans of page " + page)
-                .data(allWorkoutPlans)
+                .data(response)
                 .build();
     }
 
@@ -120,10 +160,49 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
                 repository.findAll(
                         PageRequest.of(page - 1, size, Sort.by("createdAt").descending()));
 
+        Page<WorkoutPlanResponseDto> response =
+                allWorkoutPlans.map(
+                        workoutPlan ->
+                                WorkoutPlanResponseDto.builder()
+                                        .id(workoutPlan.id())
+                                        .status(workoutPlan.status())
+                                        .scheduledDateTime(workoutPlan.scheduledDateTime())
+                                        .ownerId(workoutPlan.owner().id())
+                                        .exercises(
+                                                workoutPlan.exercises().stream()
+                                                        .map(
+                                                                exercise ->
+                                                                        ExerciseResponseDto
+                                                                                .builder()
+                                                                                .id(exercise.id())
+                                                                                .name(
+                                                                                        exercise
+                                                                                                .name())
+                                                                                .description(
+                                                                                        exercise
+                                                                                                .description())
+                                                                                .category(
+                                                                                        exercise
+                                                                                                .category())
+                                                                                .muscleGroup(
+                                                                                        exercise
+                                                                                                .muscleGroup())
+                                                                                .repetition(
+                                                                                        exercise
+                                                                                                .repetition())
+                                                                                .set(exercise.set())
+                                                                                .weight(
+                                                                                        exercise
+                                                                                                .weight())
+                                                                                .build())
+                                                        .collect(Collectors.toSet()))
+                                        .createdAt(workoutPlan.createdAt())
+                                        .build());
+
         return AppResponse.builder()
                 .success(true)
                 .message("Workout plans of page " + page)
-                .data(allWorkoutPlans)
+                .data(response)
                 .build();
     }
 }
