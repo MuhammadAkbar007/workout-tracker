@@ -24,7 +24,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -46,7 +45,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Builder
-@Accessors(fluent = true)
 @EntityListeners(AuditingEntityListener.class)
 @Table(
         uniqueConstraints = {

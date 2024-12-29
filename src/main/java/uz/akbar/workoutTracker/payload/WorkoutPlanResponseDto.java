@@ -13,16 +13,14 @@ import java.util.Set;
 import java.util.UUID;
 
 /** WorkoutPlanResponseDto */
-@JsonInclude(
-        JsonInclude.Include
-                .NON_EMPTY) // excludes null and empty collections/arrays while returning to
-// client-side
+@JsonInclude(JsonInclude.Include.NON_EMPTY) // excludes null and empty collections/arrays
+// while returning to client-side
 @Builder
 public record WorkoutPlanResponseDto(
         UUID id,
         WorkoutStatus status,
         Instant scheduledDateTime,
         UUID ownerId,
+        Instant createdAt,
         Set<ExerciseResponseDto> exercises,
-        List<Comment> comments,
-        Instant createdAt) {}
+        List<Comment> comments) {}

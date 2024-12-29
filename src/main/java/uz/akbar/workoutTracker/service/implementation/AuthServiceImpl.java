@@ -16,13 +16,13 @@ import uz.akbar.workoutTracker.enums.GeneralStatus;
 import uz.akbar.workoutTracker.enums.RoleType;
 import uz.akbar.workoutTracker.exception.AppBadException;
 import uz.akbar.workoutTracker.exception.RefreshTokenException;
+import uz.akbar.workoutTracker.mapper.UserMapper;
 import uz.akbar.workoutTracker.payload.AppResponse;
 import uz.akbar.workoutTracker.payload.JwtDto;
 import uz.akbar.workoutTracker.payload.JwtResponseDto;
 import uz.akbar.workoutTracker.payload.LogInDto;
 import uz.akbar.workoutTracker.payload.RefreshTokenRequestDto;
 import uz.akbar.workoutTracker.payload.RegisterDto;
-import uz.akbar.workoutTracker.payload.RoleDto;
 import uz.akbar.workoutTracker.payload.UserDto;
 import uz.akbar.workoutTracker.repository.RefreshTokenRepository;
 import uz.akbar.workoutTracker.repository.RoleRepository;
@@ -33,7 +33,6 @@ import uz.akbar.workoutTracker.service.AuthService;
 
 import java.time.Instant;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /** AuthServiceImpl */
 @Service
@@ -45,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private JwtProvider jwtProvider;
     @Autowired private RefreshTokenRepository refreshTokenRepository;
+    @Autowired private UserMapper userMapper;
 
     @Override
     @Transactional
@@ -68,23 +68,25 @@ public class AuthServiceImpl implements AuthService {
 
         User saved = repository.save(user);
 
-        Set<RoleDto> roleDtos =
-                saved.roles().stream()
-                        .map(
-                                savedRole ->
-                                        RoleDto.builder()
-                                                .id(savedRole.id())
-                                                .roleType(savedRole.roleType())
-                                                .build())
-                        .collect(Collectors.toSet());
+        // Set<RoleDto> roleDtos =
+        //         saved.roles().stream()
+        //                 .map(
+        //                         savedRole ->
+        //                                 RoleDto.builder()
+        //                                         .id(savedRole.id())
+        //                                         .roleType(savedRole.roleType())
+        //                                         .build())
+        //                 .collect(Collectors.toSet());
+        //
+        // UserDto userDto =
+        //         UserDto.builder()
+        //                 .id(saved.id())
+        //                 .username(saved.username())
+        //                 .email(saved.email())
+        //                 .roles(roleDtos)
+        //                 .build();
 
-        UserDto userDto =
-                UserDto.builder()
-                        .id(saved.id())
-                        .username(saved.username())
-                        .email(saved.email())
-                        .roles(roleDtos)
-                        .build();
+        UserDto userDto = userMapper.toDto(saved);
 
         return AppResponse.builder()
                 .success(true)
@@ -109,7 +111,7 @@ public class AuthServiceImpl implements AuthService {
 
         JwtResponseDto jwtResponseDto =
                 JwtResponseDto.builder()
-                        .username(user.username())
+                        .username(user.getUsername())
                         .accessToken(accessTokenDto.token())
                         .refreshToken(refreshTokenDto.token())
                         .accessTokenExpiryTime(accessTokenDto.expiryDate())
@@ -140,7 +142,7 @@ public class AuthServiceImpl implements AuthService {
                                         new RefreshTokenException(
                                                 "Refresh token is not in database!"));
 
-        if (storedToken.expiryDate().isBefore(Instant.now())) {
+        if (storedToken.getExpiryDate().isBefore(Instant.now())) {
             refreshTokenRepository.delete(storedToken);
             throw new RefreshTokenException("Refresh token has expired");
         }
@@ -191,7 +193,7 @@ public class AuthServiceImpl implements AuthService {
                                         new RefreshTokenException(
                                                 "Refresh token is not in database!"));
 
-        if (storedToken.expiryDate().isBefore(Instant.now())) {
+        if (storedToken.getExpiryDate().isBefore(Instant.now())) {
             refreshTokenRepository.delete(storedToken);
             throw new RefreshTokenException("Refresh token has expired");
         }

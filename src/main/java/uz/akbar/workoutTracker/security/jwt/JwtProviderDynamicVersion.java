@@ -4,8 +4,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -25,7 +23,6 @@ import javax.crypto.SecretKey;
 
 /** JwtProvider */
 @Component
-@Slf4j
 public class JwtProviderDynamicVersion {
 
     private final long expiryTime = 1000 * 3600 * 24; // 1-day

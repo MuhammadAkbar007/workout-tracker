@@ -7,8 +7,6 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -29,7 +27,6 @@ import javax.crypto.SecretKey;
 
 /** JwtProvider */
 @Component
-@Slf4j
 public class JwtProvider {
     private final Key jwtSecretKey;
     private final long jwtAccessTokenExpiration;
@@ -110,15 +107,15 @@ public class JwtProvider {
             Jwts.parser().verifyWith((SecretKey) jwtSecretKey).build().parse(token);
             return true;
         } catch (SecurityException ex) {
-            log.error("Invalid JWT signature");
+            System.err.println("Invalid JWT signature");
         } catch (MalformedJwtException ex) {
-            log.error("Invalid JWT token");
+            System.err.println("Invalid JWT token");
         } catch (ExpiredJwtException ex) {
-            log.error("Expired JWT token");
+            System.err.println("Expired JWT token");
         } catch (UnsupportedJwtException ex) {
-            log.error("Unsupported JWT token");
+            System.err.println("Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
-            log.error("JWT claims string is empty");
+            System.err.println("JWT claims string is empty");
         }
         return false;
     }

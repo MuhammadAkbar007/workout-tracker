@@ -13,6 +13,8 @@ import uz.akbar.workoutTracker.entity.User;
 import uz.akbar.workoutTracker.entity.WorkoutPlan;
 import uz.akbar.workoutTracker.enums.WorkoutStatus;
 import uz.akbar.workoutTracker.exception.AppBadException;
+import uz.akbar.workoutTracker.mapper.ExerciseMapper;
+import uz.akbar.workoutTracker.mapper.WorkoutPlanMapper;
 import uz.akbar.workoutTracker.payload.AppResponse;
 import uz.akbar.workoutTracker.payload.ExerciseResponseDto;
 import uz.akbar.workoutTracker.payload.WorkoutPlanDto;
@@ -25,7 +27,6 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /** WorkoutPlanServiceImpl */
 @Service
@@ -33,6 +34,8 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
     @Autowired private WorkoutPlanRepository repository;
     @Autowired private ExerciseRepository exerciseRepository;
+    @Autowired private ExerciseMapper exerciseMapper;
+    @Autowired private WorkoutPlanMapper workoutPlanMapper;
 
     @Override
     @Transactional
@@ -40,9 +43,14 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
         if (dto.scheduledDateTime().isBefore(Instant.now()))
             throw new AppBadException("Schedule is not for future");
 
-        Set<Exercise> exercises = new HashSet<>();
-        Set<ExerciseResponseDto> exercisesDto = new HashSet<>();
+        if (dto.exerciseIds() == null || dto.exerciseIds().isEmpty()) {
+            throw new AppBadException("At least one exercise should be selected");
+        }
 
+        Set<Exercise> exercises = new HashSet<>();
+        Set<ExerciseResponseDto> exercisesDtos = new HashSet<>();
+
+        // fetching exercises from database
         for (UUID exerciseId : dto.exerciseIds()) {
             Exercise exercise =
                     exerciseRepository
@@ -55,18 +63,9 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
             exercises.add(exercise);
 
-            ExerciseResponseDto exerciseDto =
-                    ExerciseResponseDto.builder()
-                            .id(exercise.id())
-                            .name(exercise.name())
-                            .description(exercise.description())
-                            .category(exercise.category())
-                            .muscleGroup(exercise.muscleGroup())
-                            .repetition(exercise.repetition())
-                            .set(exercise.set())
-                            .weight(exercise.weight())
-                            .build();
-            exercisesDto.add(exerciseDto);
+            ExerciseResponseDto exerciseDto = exerciseMapper.toDto(exercise);
+
+            exercisesDtos.add(exerciseDto);
         }
 
         WorkoutPlan workoutPlan =
@@ -83,15 +82,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
         WorkoutPlan saved = repository.save(workoutPlan);
 
-        WorkoutPlanResponseDto responseDto =
-                WorkoutPlanResponseDto.builder()
-                        .id(saved.id())
-                        .status(saved.status())
-                        .scheduledDateTime(saved.scheduledDateTime())
-                        .ownerId(saved.owner().id())
-                        .exercises(exercisesDto)
-                        .createdAt(saved.createdAt())
-                        .build();
+        WorkoutPlanResponseDto responseDto = workoutPlanMapper.toDto(saved);
 
         return AppResponse.builder()
                 .success(true)
@@ -100,51 +91,15 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
                 .build();
     }
 
-    // get user's all workoutPlans
+    // get all users' all workoutPlans for only admins
     @Override
-    public AppResponse getAll(UUID userId, int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
+    @Transactional(readOnly = true)
+    public AppResponse getAllForAdmins(int page, int size) {
+        Page<WorkoutPlan> allWorkoutPlans =
+                repository.findAll(
+                        PageRequest.of(page - 1, size, Sort.by("createdAt").descending()));
 
-        Page<WorkoutPlan> allWorkoutPlans = repository.findByOwnerId(userId, pageable);
-
-        Page<WorkoutPlanResponseDto> response =
-                allWorkoutPlans.map(
-                        workoutPlan ->
-                                WorkoutPlanResponseDto.builder()
-                                        .id(workoutPlan.id())
-                                        .status(workoutPlan.status())
-                                        .scheduledDateTime(workoutPlan.scheduledDateTime())
-                                        .ownerId(workoutPlan.owner().id())
-                                        .exercises(
-                                                workoutPlan.exercises().stream()
-                                                        .map(
-                                                                exercise ->
-                                                                        ExerciseResponseDto
-                                                                                .builder()
-                                                                                .id(exercise.id())
-                                                                                .name(
-                                                                                        exercise
-                                                                                                .name())
-                                                                                .description(
-                                                                                        exercise
-                                                                                                .description())
-                                                                                .category(
-                                                                                        exercise
-                                                                                                .category())
-                                                                                .muscleGroup(
-                                                                                        exercise
-                                                                                                .muscleGroup())
-                                                                                .repetition(
-                                                                                        exercise
-                                                                                                .repetition())
-                                                                                .set(exercise.set())
-                                                                                .weight(
-                                                                                        exercise
-                                                                                                .weight())
-                                                                                .build())
-                                                        .collect(Collectors.toSet()))
-                                        .createdAt(workoutPlan.createdAt())
-                                        .build());
+        Page<WorkoutPlanResponseDto> response = allWorkoutPlans.map(workoutPlanMapper::toDto);
 
         return AppResponse.builder()
                 .success(true)
@@ -153,51 +108,15 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
                 .build();
     }
 
-    // get all users' all workoutPlans for only admins
+    // get user's all workoutPlans
     @Override
-    public AppResponse getAllForAdmins(int page, int size) {
-        Page<WorkoutPlan> allWorkoutPlans =
-                repository.findAll(
-                        PageRequest.of(page - 1, size, Sort.by("createdAt").descending()));
+    @Transactional(readOnly = true)
+    public AppResponse getAll(UUID userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
 
-        Page<WorkoutPlanResponseDto> response =
-                allWorkoutPlans.map(
-                        workoutPlan ->
-                                WorkoutPlanResponseDto.builder()
-                                        .id(workoutPlan.id())
-                                        .status(workoutPlan.status())
-                                        .scheduledDateTime(workoutPlan.scheduledDateTime())
-                                        .ownerId(workoutPlan.owner().id())
-                                        .exercises(
-                                                workoutPlan.exercises().stream()
-                                                        .map(
-                                                                exercise ->
-                                                                        ExerciseResponseDto
-                                                                                .builder()
-                                                                                .id(exercise.id())
-                                                                                .name(
-                                                                                        exercise
-                                                                                                .name())
-                                                                                .description(
-                                                                                        exercise
-                                                                                                .description())
-                                                                                .category(
-                                                                                        exercise
-                                                                                                .category())
-                                                                                .muscleGroup(
-                                                                                        exercise
-                                                                                                .muscleGroup())
-                                                                                .repetition(
-                                                                                        exercise
-                                                                                                .repetition())
-                                                                                .set(exercise.set())
-                                                                                .weight(
-                                                                                        exercise
-                                                                                                .weight())
-                                                                                .build())
-                                                        .collect(Collectors.toSet()))
-                                        .createdAt(workoutPlan.createdAt())
-                                        .build());
+        Page<WorkoutPlan> allWorkoutPlans = repository.findByOwnerId(userId, pageable);
+
+        Page<WorkoutPlanResponseDto> response = allWorkoutPlans.map(workoutPlanMapper::toDto);
 
         return AppResponse.builder()
                 .success(true)

@@ -7,7 +7,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.3.4</version>
-		<relativePath></relativePath>
+		<relativePath />
 		<!-- lookup parent from repository -->
 	</parent>
 	<groupId>uz.akbar</groupId>
@@ -15,18 +15,18 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Workout Tracker</name>
 	<description>Roadmap.sh intermediate project for backend</description>
-	<url></url>
+	<url />
 	<licenses>
-		<license></license>
+		<license />
 	</licenses>
 	<developers>
-		<developer></developer>
+		<developer />
 	</developers>
 	<scm>
-		<connection></connection>
-		<developerConnection></developerConnection>
-		<tag></tag>
-		<url></url>
+		<connection />
+		<developerConnection />
+		<tag />
+		<url />
 	</scm>
 
 	<properties>
@@ -91,6 +91,24 @@
 			<version>1.18.34</version>
 			<optional>true</optional>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>1.6.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>1.6.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok-mapstruct-binding -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok-mapstruct-binding</artifactId>
+			<version>0.2.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -106,6 +124,16 @@
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 							<version>1.18.34</version>
+						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>1.6.3</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>0.2.0</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>

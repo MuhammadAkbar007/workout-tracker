@@ -18,7 +18,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -30,7 +29,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(of = "id")
-@Accessors(fluent = true)
 public class RefreshToken {
 
     @Id

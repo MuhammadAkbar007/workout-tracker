@@ -16,7 +16,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import uz.akbar.workoutTracker.enums.RoleType;
 
@@ -29,7 +28,6 @@ import java.util.UUID;
 @Data
 @EqualsAndHashCode(of = "id")
 @Entity(name = "roles")
-@Accessors(fluent = true)
 public class Role {
 
     @Id

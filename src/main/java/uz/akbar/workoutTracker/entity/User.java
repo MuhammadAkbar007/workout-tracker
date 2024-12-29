@@ -23,7 +23,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import uz.akbar.workoutTracker.enums.GeneralStatus;
 
@@ -36,7 +35,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Builder
-@Accessors(fluent = true)
 @Entity(name = "users")
 public class User {
 

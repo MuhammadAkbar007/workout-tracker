@@ -41,7 +41,7 @@ public class DataInitializer {
                             .orElseGet(
                                     () -> {
                                         Role role = new Role();
-                                        role.roleType(RoleType.ROLE_USER);
+                                        role.setRoleType(RoleType.ROLE_USER);
 
                                         return roleRepository.save(role);
                                     });
@@ -53,7 +53,7 @@ public class DataInitializer {
                             .orElseGet(
                                     () -> {
                                         Role role = new Role();
-                                        role.roleType(RoleType.ROLE_ADMIN);
+                                        role.setRoleType(RoleType.ROLE_ADMIN);
 
                                         return roleRepository.save(role);
                                     });

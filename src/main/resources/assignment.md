@@ -61,18 +61,19 @@
 ## System
 - [x] Write a data seeder to populate database with a list of exercises.
 - [x] implement JWT authentication
+- [x] implement MapStruct
 - [ ] admin dashboard functionalities
 
 ## User
 - [x] can sign up
 - [x] can log in
 - [x] can log out
+- [x] create workout plans: Allow users to create workouts composed of multiple exercises.
 
 > [!NOTE]
 > in-progress this task 👇
-- [ ] create workout plans: Allow users to create workouts composed of multiple exercises.
-
 - [ ] update workout plans: Allow users to update workouts and add comments.
+
 - [ ] delete workout plans
 - [ ] schedule workout plans for specific date and times
 - [ ] list workouts:  List active or pending workouts sorted by date and time
