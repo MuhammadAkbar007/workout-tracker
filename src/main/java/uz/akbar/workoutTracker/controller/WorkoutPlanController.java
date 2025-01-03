@@ -55,4 +55,8 @@ public class WorkoutPlanController {
         AppResponse response = service.getAll(userDetails.getUserId(), page, size);
         return ResponseEntity.ok(response);
     }
+
+    // @PutMapping("/mine")
+    // @PreAuthorize("hasRole('USER')")
+    // public ResponseEntity<?> update()
 }
