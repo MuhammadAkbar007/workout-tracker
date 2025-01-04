@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### NeoVim ###
+ /queries
+ rest_nvim_result#Response

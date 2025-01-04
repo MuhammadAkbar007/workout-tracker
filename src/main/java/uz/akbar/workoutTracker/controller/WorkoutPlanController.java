@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import uz.akbar.workoutTracker.payload.AppResponse;
 import uz.akbar.workoutTracker.payload.WorkoutPlanDto;
+import uz.akbar.workoutTracker.payload.WorkoutPlanResponseDto;
 import uz.akbar.workoutTracker.security.CustomUserDetails;
 import uz.akbar.workoutTracker.service.WorkoutPlanService;
 
@@ -67,7 +69,15 @@ public class WorkoutPlanController {
         AppResponse response = service.getById(id, userDetails.getUser());
         return ResponseEntity.ok(response);
     }
-    // @PutMapping("/mine")
-    // @PreAuthorize("hasRole('USER')")
-    // public ResponseEntity<?> update()
+
+    @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> update(
+            @PathVariable UUID id,
+            @Valid @RequestBody WorkoutPlanResponseDto dto,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        AppResponse response = service.update(id, dto, userDetails.getUser());
+        return ResponseEntity.ok(response);
+    }
 }

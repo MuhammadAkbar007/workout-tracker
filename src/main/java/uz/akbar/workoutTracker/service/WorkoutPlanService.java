@@ -1,8 +1,11 @@
 package uz.akbar.workoutTracker.service;
 
+import jakarta.validation.Valid;
+
 import uz.akbar.workoutTracker.entity.User;
 import uz.akbar.workoutTracker.payload.AppResponse;
 import uz.akbar.workoutTracker.payload.WorkoutPlanDto;
+import uz.akbar.workoutTracker.payload.WorkoutPlanResponseDto;
 
 import java.util.UUID;
 
@@ -16,4 +19,6 @@ public interface WorkoutPlanService {
     AppResponse getAllForAdmins(int page, int size);
 
     AppResponse getById(UUID id, User user);
+
+    AppResponse update(UUID id, @Valid WorkoutPlanResponseDto dto, User user);
 }

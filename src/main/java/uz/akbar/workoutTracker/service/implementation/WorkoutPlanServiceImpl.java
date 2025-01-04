@@ -21,11 +21,13 @@ import uz.akbar.workoutTracker.payload.ExerciseResponseDto;
 import uz.akbar.workoutTracker.payload.WorkoutPlanDto;
 import uz.akbar.workoutTracker.payload.WorkoutPlanResponseDto;
 import uz.akbar.workoutTracker.repository.ExerciseRepository;
+import uz.akbar.workoutTracker.repository.UserRepository;
 import uz.akbar.workoutTracker.repository.WorkoutPlanRepository;
 import uz.akbar.workoutTracker.service.WorkoutPlanService;
 
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -35,6 +37,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
     @Autowired private WorkoutPlanRepository repository;
     @Autowired private ExerciseRepository exerciseRepository;
+    @Autowired private UserRepository userRepository;
     @Autowired private ExerciseMapper exerciseMapper;
     @Autowired private WorkoutPlanMapper mapper;
 
@@ -150,6 +153,59 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
                 .success(true)
                 .message("Workout plan retrieved successfully")
                 .data(mapper.toDto(workoutPlan))
+                .build();
+    }
+
+    @Override
+    public AppResponse update(UUID id, WorkoutPlanResponseDto dto, User user) {
+        WorkoutPlan workoutPlan;
+
+        boolean isAdmin =
+                user.getRoles().stream()
+                        .anyMatch(role -> role.getRoleType() == RoleType.ROLE_ADMIN);
+
+        if (dto.scheduledDateTime().isBefore(Instant.now()))
+            throw new AppBadException("Schedule is not for future");
+
+        if (isAdmin) {
+            workoutPlan =
+                    repository
+                            .findById(id)
+                            .orElseThrow(() -> new AppBadException("Workout plan not found"));
+        } else {
+            workoutPlan =
+                    repository
+                            .findByIdAndOwnerId(id, user.getId())
+                            .orElseThrow(() -> new AppBadException("Workout plan not found"));
+        }
+
+        workoutPlan.setStatus(dto.status());
+        workoutPlan.setScheduledDateTime(dto.scheduledDateTime());
+
+        if (isAdmin && dto.ownerId() != null) {
+            User owner =
+                    userRepository
+                            .findById(dto.ownerId())
+                            .orElseThrow(() -> new AppBadException("User not found"));
+
+            workoutPlan.setOwner(owner);
+        }
+
+        if (dto.exerciseIds() != null && !dto.exerciseIds().isEmpty()) {
+            List<Exercise> exercises = exerciseRepository.findAllById(dto.exerciseIds());
+
+            if (exercises.size() != dto.exerciseIds().size())
+                throw new AppBadException("One or more exercises not foun");
+
+            workoutPlan.setExercises(exerciseMapper.toSet(exercises));
+        }
+
+        WorkoutPlan saved = repository.save(workoutPlan);
+
+        return AppResponse.builder()
+                .success(true)
+                .message("Workout plan updated successfully")
+                .data(mapper.toDto(saved))
                 .build();
     }
 }

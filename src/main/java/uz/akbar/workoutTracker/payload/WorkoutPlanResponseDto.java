@@ -23,4 +23,5 @@ public record WorkoutPlanResponseDto(
         UUID ownerId,
         Instant createdAt,
         Set<ExerciseResponseDto> exercises,
+        Set<UUID> exerciseIds,
         List<Comment> comments) {}

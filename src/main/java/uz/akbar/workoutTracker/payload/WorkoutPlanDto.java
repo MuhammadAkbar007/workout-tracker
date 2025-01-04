@@ -9,7 +9,12 @@ import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
-/** WorkoutPlanDto */
+/**
+ * WorkoutPlanDto
+ *
+ * @param Instant scheduledDateTime
+ * @param Set<UUID> exerciseIds
+ */
 public record WorkoutPlanDto(
         @JsonFormat(
                         shape = JsonFormat.Shape.STRING,
@@ -17,7 +22,6 @@ public record WorkoutPlanDto(
                         timezone = "UTC")
                 @NotNull(message = "Scheduled date and time are required")
                 @FutureOrPresent(message = "Schedule must be in the future")
-                Instant
-                        scheduledDateTime, // 2024-12-30T14:30:00.000+0500 sample Instant with Uzb
-                                           // timezone
+                Instant scheduledDateTime, // 2024-12-30T14:30:00.000+0500 sample Instant with Uzb
+        // timezone
         @NotNull(message = "Exercises should be selected") Set<UUID> exerciseIds) {}
