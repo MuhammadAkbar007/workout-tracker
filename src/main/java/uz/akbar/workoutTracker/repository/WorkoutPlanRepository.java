@@ -6,9 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import uz.akbar.workoutTracker.entity.WorkoutPlan;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /** WorkoutPlanRepository */
 public interface WorkoutPlanRepository extends JpaRepository<WorkoutPlan, UUID> {
     Page<WorkoutPlan> findByOwnerId(UUID userId, Pageable pageable);
+
+    Optional<WorkoutPlan> findByIdAndOwnerId(UUID id, UUID ownerId);
 }

@@ -1,4 +1,4 @@
-### ADMIN login for tokens
+### token for ADMIN login
 POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
@@ -7,7 +7,7 @@ Content-Type: application/json
 	"password": "root123"
 }
 
-### USER login for tokens
+### token for USER login
 POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
@@ -37,3 +37,11 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJha2JhcjAwNyIsInVzZXJJZCI6I
 ### User's all workoutplans (pagination default page = 1 & size = 10)
 GET http://localhost:8080/api/v1/workoutplan/mine
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiYzgyYjcxYTctOTA2Mi00OGI0LWJhOTQtNzBmZDAzNzhmNjljIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNzM1NDg2ODYyLCJleHAiOjE3MzU0OTA0NjJ9.hU4kEZfp-l47e-AsgTqZieugFkydUuk85t16yNZ-1x6QmOTGkCGMcYizU2dIQoLpuEzKqz_7WyK3qgOJAFFKdg
+
+### Any workoutPlan by id for admin
+GET http://localhost:8080/api/v1/workoutplan/8012d54e-a280-420c-a5b0-d9d69ca6369a
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJha2JhcjAwNyIsInVzZXJJZCI6ImU5OTEzMTlmLThmZTMtNDc1Zi1hYjYzLTliMjczYTRhNzUwMiIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX1VTRVIifSx7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifV0sImlhdCI6MTczNTk4MjkxNiwiZXhwIjoxNzM1OTg2NTE2fQ.EwKpGdgDwKD2aE1U4ceq3yolDdjtF2IcbngkyYfC8SjOxtOIpjgunbFky1g_gCz02Wii7pP-d7P5sc6OaR_W9Q
+
+### user's workoutPlan by id
+GET http://localhost:8080/api/v1/workoutplan/d2d97309-8f6f-4fe2-b187-b9e54201d8b9
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiYzgyYjcxYTctOTA2Mi00OGI0LWJhOTQtNzBmZDAzNzhmNjljIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNzM1OTgyOTQ3LCJleHAiOjE3MzU5ODY1NDd9.rMoSrXYlc6qHR_TpVWZOeLw38w1a6WZIcFnt4EmUf_pGIkfP4U6OwOtRKI7-EFOIdtsk-vH03Uq2AQizY2zgtQ

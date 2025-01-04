@@ -69,12 +69,12 @@
 - [x] can log in
 - [x] can log out
 - [x] create workout plans: Allow users to create workouts composed of multiple exercises.
+- [x] see workout plan by id: admin any & user only his/her
 
 > [!NOTE]
 > in-progress this task 👇
-- [ ] see workout plan by id: admin any & user only his/her
-
 - [ ] update workout plans: Allow users to update workouts and add comments.
+
 - [ ] delete workout plans
 - [ ] schedule workout plans for specific date and times
 - [ ] list workouts:  List active or pending workouts sorted by date and time

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uz.akbar.workoutTracker.entity.Exercise;
 import uz.akbar.workoutTracker.entity.User;
 import uz.akbar.workoutTracker.entity.WorkoutPlan;
+import uz.akbar.workoutTracker.enums.RoleType;
 import uz.akbar.workoutTracker.enums.WorkoutStatus;
 import uz.akbar.workoutTracker.exception.AppBadException;
 import uz.akbar.workoutTracker.mapper.ExerciseMapper;
@@ -35,7 +36,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     @Autowired private WorkoutPlanRepository repository;
     @Autowired private ExerciseRepository exerciseRepository;
     @Autowired private ExerciseMapper exerciseMapper;
-    @Autowired private WorkoutPlanMapper workoutPlanMapper;
+    @Autowired private WorkoutPlanMapper mapper;
 
     @Override
     @Transactional
@@ -82,7 +83,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
         WorkoutPlan saved = repository.save(workoutPlan);
 
-        WorkoutPlanResponseDto responseDto = workoutPlanMapper.toDto(saved);
+        WorkoutPlanResponseDto responseDto = mapper.toDto(saved);
 
         return AppResponse.builder()
                 .success(true)
@@ -99,7 +100,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
                 repository.findAll(
                         PageRequest.of(page - 1, size, Sort.by("createdAt").descending()));
 
-        Page<WorkoutPlanResponseDto> response = allWorkoutPlans.map(workoutPlanMapper::toDto);
+        Page<WorkoutPlanResponseDto> response = allWorkoutPlans.map(mapper::toDto);
 
         return AppResponse.builder()
                 .success(true)
@@ -116,12 +117,39 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
         Page<WorkoutPlan> allWorkoutPlans = repository.findByOwnerId(userId, pageable);
 
-        Page<WorkoutPlanResponseDto> response = allWorkoutPlans.map(workoutPlanMapper::toDto);
+        Page<WorkoutPlanResponseDto> response = allWorkoutPlans.map(mapper::toDto);
 
         return AppResponse.builder()
                 .success(true)
                 .message("Workout plans of page " + page)
                 .data(response)
+                .build();
+    }
+
+    @Override
+    public AppResponse getById(UUID id, User user) {
+        WorkoutPlan workoutPlan;
+
+        boolean isAdmin =
+                user.getRoles().stream()
+                        .anyMatch(role -> role.getRoleType() == RoleType.ROLE_ADMIN);
+
+        if (isAdmin) {
+            workoutPlan =
+                    repository
+                            .findById(id)
+                            .orElseThrow(() -> new AppBadException("Workout plan not found"));
+        } else {
+            workoutPlan =
+                    repository
+                            .findByIdAndOwnerId(id, user.getId())
+                            .orElseThrow(() -> new AppBadException("Workout plan not found"));
+        }
+
+        return AppResponse.builder()
+                .success(true)
+                .message("Workout plan retrieved successfully")
+                .data(mapper.toDto(workoutPlan))
                 .build();
     }
 }

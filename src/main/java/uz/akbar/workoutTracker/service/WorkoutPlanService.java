@@ -14,4 +14,6 @@ public interface WorkoutPlanService {
     AppResponse getAll(UUID userId, int page, int size);
 
     AppResponse getAllForAdmins(int page, int size);
+
+    AppResponse getById(UUID id, User user);
 }
