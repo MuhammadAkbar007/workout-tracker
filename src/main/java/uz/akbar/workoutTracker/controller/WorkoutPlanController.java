@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import uz.akbar.workoutTracker.payload.AppResponse;
 import uz.akbar.workoutTracker.payload.WorkoutPlanDto;
-import uz.akbar.workoutTracker.payload.WorkoutPlanResponseDto;
+import uz.akbar.workoutTracker.payload.WorkoutPlanUpdateDto;
 import uz.akbar.workoutTracker.security.CustomUserDetails;
 import uz.akbar.workoutTracker.service.WorkoutPlanService;
 
@@ -74,9 +74,10 @@ public class WorkoutPlanController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> update(
             @PathVariable UUID id,
-            @Valid @RequestBody WorkoutPlanResponseDto dto,
+            @Valid @RequestBody WorkoutPlanUpdateDto dto,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
+        System.out.println("keldi");
         AppResponse response = service.update(id, dto, userDetails.getUser());
         return ResponseEntity.ok(response);
     }

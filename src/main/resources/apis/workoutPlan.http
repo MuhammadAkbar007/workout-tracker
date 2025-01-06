@@ -48,12 +48,13 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlc
 
 ### Update
 PUT http://localhost:8080/api/v1/workoutplan/d2d97309-8f6f-4fe2-b187-b9e54201d8b9
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJha2JhcjAwNyIsInVzZXJJZCI6ImU5OTEzMTlmLThmZTMtNDc1Zi1hYjYzLTliMjczYTRhNzUwMiIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX1VTRVIifSx7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifV0sImlhdCI6MTczNjAwMzg2NywiZXhwIjoxNzM2MDA3NDY3fQ.iJVldPPmJE5J-7Kvxf0h_gLPIYBCMZOt8q_9xZ5bOsiI9tejEQg4I_5gCDFXuPvCp37nPWHgYMLhX-aygjFc0A
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiYzgyYjcxYTctOTA2Mi00OGI0LWJhOTQtNzBmZDAzNzhmNjljIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNzM2MTMwMTYxLCJleHAiOjE3MzYxMzM3NjF9.QfdNQ1J4TL8KjnL1Gq5_pz7DPOK_YvQ9mixSSw4VdZR5OsBiI1CkEwYv3JOTbWkdUPWfmWoeoE0fqVoqT1TeMQ
 Content-Type: application/json
 
 {
 	"status": "PENDING",
-	"scheduledDateTime": "2025-11-30T14:30:00.000+0500",
+	"scheduledDateTime": "2025-12-30T14:30:00.000+0500",
+	"ownerId": "e991319f-8fe3-475f-ab63-9b273a4a7502",
 	"exerciseIds": [
 		"242d3963-019c-4849-9761-c48bd51a6a38",
 		"632e442c-4046-498c-a829-496a23524a1b",

@@ -35,3 +35,4 @@ build/
 ### NeoVim ###
  /queries
  rest_nvim_result#Response
+ server exited unexpectedly

@@ -20,6 +20,7 @@ import uz.akbar.workoutTracker.payload.AppResponse;
 import uz.akbar.workoutTracker.payload.ExerciseResponseDto;
 import uz.akbar.workoutTracker.payload.WorkoutPlanDto;
 import uz.akbar.workoutTracker.payload.WorkoutPlanResponseDto;
+import uz.akbar.workoutTracker.payload.WorkoutPlanUpdateDto;
 import uz.akbar.workoutTracker.repository.ExerciseRepository;
 import uz.akbar.workoutTracker.repository.UserRepository;
 import uz.akbar.workoutTracker.repository.WorkoutPlanRepository;
@@ -157,7 +158,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     }
 
     @Override
-    public AppResponse update(UUID id, WorkoutPlanResponseDto dto, User user) {
+    public AppResponse update(UUID id, WorkoutPlanUpdateDto dto, User user) {
         WorkoutPlan workoutPlan;
 
         boolean isAdmin =
