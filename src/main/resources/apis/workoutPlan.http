@@ -61,3 +61,7 @@ Content-Type: application/json
 		"8c1fd09a-7605-45d8-b4a8-0659793aae8e"
 	]
 }
+
+### Delete
+DELETE http://localhost:8080/api/v1/workoutplan/8012d54e-a280-420c-a5b0-d9d69ca6369a
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJha2JhcjAwNyIsInVzZXJJZCI6ImU5OTEzMTlmLThmZTMtNDc1Zi1hYjYzLTliMjczYTRhNzUwMiIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX1VTRVIifSx7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifV0sImlhdCI6MTczNjM1NDYwNSwiZXhwIjoxNzM2MzU4MjA1fQ.lmkcya9OuNGdkzxwa6wXcXhngHnGiLE5Ge_CaB2y0EOCULWrxWg2ZfpxhB-0ign5C42_sfJXXZODtCYpJVY4EA

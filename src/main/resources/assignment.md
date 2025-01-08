@@ -1,3 +1,28 @@
+# Functionality
+## System
+- [x] Write a data seeder to populate database with a list of exercises.
+- [x] implement JWT authentication
+- [x] implement MapStruct
+- [ ] admin dashboard functionalities
+
+## User
+- [x] can sign up
+- [x] can log in
+- [x] can log out
+- [x] create workout plans: Allow users to create workouts composed of multiple exercises.
+- [x] see workout plan by id: admin any & user only his/her
+- [x] update workout plans: Allow users to update workouts and add comments.
+
+> [!NOTE]
+> in-progress this task 👇
+- [ ] delete workout plans
+
+- [ ] schedule workout plans for specific date and times
+- [ ] list workouts:  List active or pending workouts sorted by date and time
+- [ ] track his progress
+- [ ] Generate reports on past workouts
+- [ ] Delete prompt file
+
 # Entity
 ## User
 * id
@@ -56,28 +81,4 @@
 > [!NOTE]
 > * Exercises will be used to create workout plans.
 > * Users should only be able to access their own workout plans.
-
-# Functionality
-## System
-- [x] Write a data seeder to populate database with a list of exercises.
-- [x] implement JWT authentication
-- [x] implement MapStruct
-- [ ] admin dashboard functionalities
-
-## User
-- [x] can sign up
-- [x] can log in
-- [x] can log out
-- [x] create workout plans: Allow users to create workouts composed of multiple exercises.
-- [x] see workout plan by id: admin any & user only his/her
-
-> [!NOTE]
-> in-progress this task 👇
-- [ ] update workout plans: Allow users to update workouts and add comments.
-
-- [ ] delete workout plans
-- [ ] schedule workout plans for specific date and times
-- [ ] list workouts:  List active or pending workouts sorted by date and time
-- [ ] track his progress
-- [ ] Generate reports on past workouts
 

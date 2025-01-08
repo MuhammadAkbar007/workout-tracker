@@ -42,6 +42,10 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     @Autowired private ExerciseMapper exerciseMapper;
     @Autowired private WorkoutPlanMapper mapper;
 
+    private boolean determineIsAdmin(User user) {
+        return user.getRoles().stream().anyMatch(role -> role.getRoleType() == RoleType.ROLE_ADMIN);
+    }
+
     @Override
     @Transactional
     public AppResponse create(WorkoutPlanDto dto, User user) {
@@ -133,6 +137,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     */
 
     @Override
+    @Transactional(readOnly = true)
     public AppResponse getAll(int page, int size, User user) {
 
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
@@ -154,6 +159,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AppResponse getById(UUID id, User user) {
         WorkoutPlan workoutPlan;
 
@@ -177,6 +183,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     }
 
     @Override
+    @Transactional
     public AppResponse update(UUID id, WorkoutPlanUpdateDto dto, User user) {
         WorkoutPlan workoutPlan;
         boolean isAdmin = determineIsAdmin(user);
@@ -226,7 +233,22 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
                 .build();
     }
 
-    private boolean determineIsAdmin(User user) {
-        return user.getRoles().stream().anyMatch(role -> role.getRoleType() == RoleType.ROLE_ADMIN);
+    @Override
+    @Transactional
+    public AppResponse delete(UUID id, User user) {
+        if (determineIsAdmin(user)) {
+            repository.deleteById(id);
+        } else {
+            int deletedCount = repository.deleteByIdAndOwnerId(id, user.getId());
+
+            if (deletedCount == 0)
+                throw new AppBadException(
+                        "Workout plan not found or you don't have permission to delete it");
+        }
+
+        return AppResponse.builder()
+                .success(true)
+                .message("Workout plan successfully deleted")
+                .build();
     }
 }
