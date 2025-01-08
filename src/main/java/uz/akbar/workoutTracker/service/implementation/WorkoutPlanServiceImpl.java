@@ -138,11 +138,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
         Page<WorkoutPlan> workoutPlans;
 
-        boolean isAdmin =
-                user.getRoles().stream()
-                        .anyMatch(role -> role.getRoleType() == RoleType.ROLE_ADMIN);
-
-        if (isAdmin) {
+        if (determineIsAdmin(user)) {
             workoutPlans = repository.findAll(pageable);
         } else {
             workoutPlans = repository.findByOwnerId(user.getId(), pageable);
@@ -161,11 +157,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     public AppResponse getById(UUID id, User user) {
         WorkoutPlan workoutPlan;
 
-        boolean isAdmin =
-                user.getRoles().stream()
-                        .anyMatch(role -> role.getRoleType() == RoleType.ROLE_ADMIN);
-
-        if (isAdmin) {
+        if (determineIsAdmin(user)) {
             workoutPlan =
                     repository
                             .findById(id)
@@ -187,10 +179,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     @Override
     public AppResponse update(UUID id, WorkoutPlanUpdateDto dto, User user) {
         WorkoutPlan workoutPlan;
-
-        boolean isAdmin =
-                user.getRoles().stream()
-                        .anyMatch(role -> role.getRoleType() == RoleType.ROLE_ADMIN);
+        boolean isAdmin = determineIsAdmin(user);
 
         if (dto.scheduledDateTime().isBefore(Instant.now()))
             throw new AppBadException("Schedule is not for future");
@@ -235,5 +224,9 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
                 .message("Workout plan updated successfully")
                 .data(mapper.toDto(saved))
                 .build();
+    }
+
+    private boolean determineIsAdmin(User user) {
+        return user.getRoles().stream().anyMatch(role -> role.getRoleType() == RoleType.ROLE_ADMIN);
     }
 }

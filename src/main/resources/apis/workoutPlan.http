@@ -32,7 +32,7 @@ Content-Type: application/json
 
 ### All workoutplans if admin all users', if user his/her own all (pagination default page = 1 & size = 10)
 GET http://localhost:8080/api/v1/workoutplan
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiYzgyYjcxYTctOTA2Mi00OGI0LWJhOTQtNzBmZDAzNzhmNjljIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNzM2MzM4ODA2LCJleHAiOjE3MzYzNDI0MDZ9.PqPiGV6iyXH7U-_zGFx03xVUCtQYkA5qSHzHx9RMoeh3_LGmydvMhPXx8b4UiF7hdSfXbmb9-GVCPT1bdCr8Rg
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiYzgyYjcxYTctOTA2Mi00OGI0LWJhOTQtNzBmZDAzNzhmNjljIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNzM2MzQ3NjM0LCJleHAiOjE3MzYzNTEyMzR9.IK_9gA9_och-Rx9somqL4EMPIObutZ3_4IXi399roR3mDpOe4qg3cw1ejg4SkZaEcipWEPLSdKm8kfUCfQgPFw
 
 ### User's all workoutplans (pagination default page = 1 & size = 10) -> changed, not active right now
 # GET http://localhost:8080/api/v1/workoutplan/mine
