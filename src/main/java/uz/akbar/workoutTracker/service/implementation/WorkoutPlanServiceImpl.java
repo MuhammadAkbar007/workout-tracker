@@ -138,15 +138,22 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
     @Override
     @Transactional(readOnly = true)
-    public AppResponse getAll(int page, int size, User user) {
-
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
+    public AppResponse getAll(int page, int size, WorkoutStatus status, User user) {
         Page<WorkoutPlan> workoutPlans;
 
+        Pageable pageable =
+                PageRequest.of(page - 1, size, Sort.by("scheduledDateTime").descending());
+
         if (determineIsAdmin(user)) {
-            workoutPlans = repository.findAll(pageable);
+            workoutPlans =
+                    (status != null)
+                            ? repository.findAllByStatus(status, pageable)
+                            : repository.findAll(pageable);
         } else {
-            workoutPlans = repository.findByOwnerId(user.getId(), pageable);
+            workoutPlans =
+                    (status != null)
+                            ? repository.findAllByStatusAndOwnerId(status, user.getId(), pageable)
+                            : repository.findByOwnerId(user.getId(), pageable);
         }
 
         Page<WorkoutPlanResponseDto> response = workoutPlans.map(mapper::toDto);

@@ -12,13 +12,13 @@
 - [x] create workout plans: Allow users to create workouts composed of multiple exercises.
 - [x] see workout plan by id: admin any & user only his/her
 - [x] update workout plans: Allow users to update workouts and add comments.
+- [x] delete workout plans
 
 > [!NOTE]
 > in-progress this task 👇
-- [ ] delete workout plans
+- [ ] list workouts:  List active or pending workouts sorted by date and time
 
 - [ ] schedule workout plans for specific date and times
-- [ ] list workouts:  List active or pending workouts sorted by date and time
 - [ ] track his progress
 - [ ] Generate reports on past workouts
 - [ ] Delete prompt file

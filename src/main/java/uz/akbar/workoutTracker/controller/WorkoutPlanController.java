@@ -1,6 +1,7 @@
 package uz.akbar.workoutTracker.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import uz.akbar.workoutTracker.enums.WorkoutStatus;
 import uz.akbar.workoutTracker.payload.AppResponse;
 import uz.akbar.workoutTracker.payload.WorkoutPlanDto;
 import uz.akbar.workoutTracker.payload.WorkoutPlanUpdateDto;
@@ -46,9 +48,11 @@ public class WorkoutPlanController {
     public ResponseEntity<?> getAll(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
+            @RequestParam(value = "status", required = false) @Pattern(regexp = "ACTIVE|PENDING")
+                    WorkoutStatus status,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        AppResponse response = service.getAll(page, size, userDetails.getUser());
+        AppResponse response = service.getAll(page, size, status, userDetails.getUser());
         return ResponseEntity.ok(response);
     }
 
