@@ -41,25 +41,36 @@ public class WorkoutPlanController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')") // only admin can see all users' workoutplans
-    public ResponseEntity<?> getAllForAdmins(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        AppResponse response = service.getAllForAdmins(page, size);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/mine")
-    @PreAuthorize("hasRole('USER')") // user's only his/her own workoutplans
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getAll(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        AppResponse response = service.getAll(userDetails.getUserId(), page, size);
+        AppResponse response = service.getAll(page, size, userDetails.getUser());
         return ResponseEntity.ok(response);
     }
+
+    // @GetMapping
+    // @PreAuthorize("hasRole('ADMIN')") // only admin can see all users' workoutplans
+    // public ResponseEntity<?> getAllForAdmins(
+    //         @RequestParam(defaultValue = "1") int page,
+    //         @RequestParam(defaultValue = "10") int size) {
+    //
+    //     AppResponse response = service.getAllForAdmins(page, size);
+    //     return ResponseEntity.ok(response);
+    // }
+
+    // @GetMapping("/mine")
+    // @PreAuthorize("hasRole('USER')") // user's only his/her own workoutplans
+    // public ResponseEntity<?> getAll(
+    //         @RequestParam(defaultValue = "1") int page,
+    //         @RequestParam(defaultValue = "10") int size,
+    //         @AuthenticationPrincipal CustomUserDetails userDetails) {
+    //
+    //     AppResponse response = service.getAll(userDetails.getUserId(), page, size);
+    //     return ResponseEntity.ok(response);
+    // }
 
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")

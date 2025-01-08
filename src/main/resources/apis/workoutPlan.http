@@ -30,13 +30,13 @@ Content-Type: application/json
 	]
 }
 
-### All users' workoutplans for only admins (pagination default page = 1 & size = 10)
+### All workoutplans if admin all users', if user his/her own all (pagination default page = 1 & size = 10)
 GET http://localhost:8080/api/v1/workoutplan
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJha2JhcjAwNyIsInVzZXJJZCI6ImU5OTEzMTlmLThmZTMtNDc1Zi1hYjYzLTliMjczYTRhNzUwMiIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX1VTRVIifSx7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifV0sImlhdCI6MTczNTQ4Njc1OSwiZXhwIjoxNzM1NDkwMzU5fQ.M4nVfVuAIYz_UaRe7df4893yNOxLX7Eojw4HhdD09StP3B8zt0y0mWh4e2DDW8Zt20YMJaPPnLl0dkD0SOYT4Q
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiYzgyYjcxYTctOTA2Mi00OGI0LWJhOTQtNzBmZDAzNzhmNjljIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNzM2MzM4ODA2LCJleHAiOjE3MzYzNDI0MDZ9.PqPiGV6iyXH7U-_zGFx03xVUCtQYkA5qSHzHx9RMoeh3_LGmydvMhPXx8b4UiF7hdSfXbmb9-GVCPT1bdCr8Rg
 
-### User's all workoutplans (pagination default page = 1 & size = 10)
-GET http://localhost:8080/api/v1/workoutplan/mine
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiYzgyYjcxYTctOTA2Mi00OGI0LWJhOTQtNzBmZDAzNzhmNjljIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNzM1NDg2ODYyLCJleHAiOjE3MzU0OTA0NjJ9.hU4kEZfp-l47e-AsgTqZieugFkydUuk85t16yNZ-1x6QmOTGkCGMcYizU2dIQoLpuEzKqz_7WyK3qgOJAFFKdg
+### User's all workoutplans (pagination default page = 1 & size = 10) -> changed, not active right now
+# GET http://localhost:8080/api/v1/workoutplan/mine
+# Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiYzgyYjcxYTctOTA2Mi00OGI0LWJhOTQtNzBmZDAzNzhmNjljIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNzM1NDg2ODYyLCJleHAiOjE3MzU0OTA0NjJ9.hU4kEZfp-l47e-AsgTqZieugFkydUuk85t16yNZ-1x6QmOTGkCGMcYizU2dIQoLpuEzKqz_7WyK3qgOJAFFKdg
 
 ### Any workoutPlan by id for admin
 GET http://localhost:8080/api/v1/workoutplan/8012d54e-a280-420c-a5b0-d9d69ca6369a

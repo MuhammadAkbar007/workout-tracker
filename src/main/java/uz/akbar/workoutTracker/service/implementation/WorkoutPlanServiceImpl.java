@@ -97,31 +97,58 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     }
 
     // get all users' all workoutPlans for only admins
-    @Override
-    @Transactional(readOnly = true)
-    public AppResponse getAllForAdmins(int page, int size) {
-        Page<WorkoutPlan> allWorkoutPlans =
-                repository.findAll(
-                        PageRequest.of(page - 1, size, Sort.by("createdAt").descending()));
+    /*     @Override
+       @Transactional(readOnly = true)
+       public AppResponse getAllForAdmins(int page, int size) {
+           Page<WorkoutPlan> allWorkoutPlans =
+                   repository.findAll(
+                           PageRequest.of(page - 1, size, Sort.by("createdAt").descending()));
 
-        Page<WorkoutPlanResponseDto> response = allWorkoutPlans.map(mapper::toDto);
+           Page<WorkoutPlanResponseDto> response = allWorkoutPlans.map(mapper::toDto);
 
-        return AppResponse.builder()
-                .success(true)
-                .message("Workout plans of page " + page)
-                .data(response)
-                .build();
-    }
+           return AppResponse.builder()
+                   .success(true)
+                   .message("Workout plans of page " + page)
+                   .data(response)
+                   .build();
+        }
+    */
 
     // get user's all workoutPlans
+    /* @Override
+       @Transactional(readOnly = true)
+       public AppResponse getAll(UUID userId, int page, int size) {
+           Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
+
+           Page<WorkoutPlan> allWorkoutPlans = repository.findByOwnerId(userId, pageable);
+
+           Page<WorkoutPlanResponseDto> response = allWorkoutPlans.map(mapper::toDto);
+
+           return AppResponse.builder()
+                   .success(true)
+                   .message("Workout plans of page " + page)
+                   .data(response)
+                   .build();
+       }
+    */
+
     @Override
-    @Transactional(readOnly = true)
-    public AppResponse getAll(UUID userId, int page, int size) {
+    public AppResponse getAll(int page, int size, User user) {
+
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
+        Page<WorkoutPlan> workoutPlans;
 
-        Page<WorkoutPlan> allWorkoutPlans = repository.findByOwnerId(userId, pageable);
+        boolean isAdmin =
+                user.getRoles().stream()
+                        .anyMatch(role -> role.getRoleType() == RoleType.ROLE_ADMIN);
 
-        Page<WorkoutPlanResponseDto> response = allWorkoutPlans.map(mapper::toDto);
+        if (isAdmin) {
+            workoutPlans = repository.findAll(pageable);
+        } else {
+            workoutPlans = repository.findByOwnerId(user.getId(), pageable);
+        }
+
+        Page<WorkoutPlanResponseDto> response = workoutPlans.map(mapper::toDto);
 
         return AppResponse.builder()
                 .success(true)
