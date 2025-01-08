@@ -33,6 +33,7 @@ build/
 .vscode/
 
 ### NeoVim ###
- /queries
- rest_nvim_result#Response
- server exited unexpectedly
+/queries
+rest_nvim_result#Response
+server exited unexpectedly
+command list-panes: too many arguments (need at most 0)
