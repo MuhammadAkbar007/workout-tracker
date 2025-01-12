@@ -18,21 +18,25 @@ Content-Type: application/json
 
 ### Create
 POST http://localhost:8080/api/v1/workoutplan
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiYzgyYjcxYTctOTA2Mi00OGI0LWJhOTQtNzBmZDAzNzhmNjljIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNzM1NDg2ODYyLCJleHAiOjE3MzU0OTA0NjJ9.hU4kEZfp-l47e-AsgTqZieugFkydUuk85t16yNZ-1x6QmOTGkCGMcYizU2dIQoLpuEzKqz_7WyK3qgOJAFFKdg
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiY2YxYWVjNTgtNmVjMC00NmYxLWIzYWYtOGVlMWY1ZjBiNjUwIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNzM2NjcxOTY4LCJleHAiOjE3MzY2NzU1Njh9.zPfMak0DJ_3IJW_cyUnt8AEfgEoLPClnYKUx5G1jrJGqpL2NRnPks5bwgbXLAqgmns8LOoIPZVMR0CZHdRUXMA
 Content-Type: application/json
 
 {
 	"scheduledDateTime": "2025-11-30T14:30:00.000+0500",
 	"exerciseIds": [
-		"242d3963-019c-4849-9761-c48bd51a6a38",
-		"632e442c-4046-498c-a829-496a23524a1b",
-		"8c1fd09a-7605-45d8-b4a8-0659793aae8e"
+		"51c80d65-1cf9-4800-8fe4-bd9da1d9a16d",
+		"b21684b2-4737-4e71-861c-93b43612ed41",
+		"01dc7929-75af-4648-821d-944e3d4688a1"
 	]
 }
 
 ### All workoutplans if admin all users', if user his/her own all (pagination default page = 1 & size = 10)
 GET http://localhost:8080/api/v1/workoutplan
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJha2JhcjAwNyIsInVzZXJJZCI6ImU5OTEzMTlmLThmZTMtNDc1Zi1hYjYzLTliMjczYTRhNzUwMiIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX1VTRVIifSx7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifV0sImlhdCI6MTczNjM2MTEzNywiZXhwIjoxNzM2MzY0NzM3fQ.EVAJ6rRPGHySLPtGv2LNAe8wE_jANsKLjeyQQgPS9mmpMVGGY-Fk-dn8bOXNlrOOySderVxMdSMLrCxPhwPW9Q
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJha2JhcjAwNyIsInVzZXJJZCI6ImUwYTY5Yjk2LTE4YTAtNGI2Ny04ZTY2LTU3OTY2OTM2ZjQ0ZCIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn0seyJhdXRob3JpdHkiOiJST0xFX1VTRVIifV0sImlhdCI6MTczNjY3NDEyNSwiZXhwIjoxNzM2Njc3NzI1fQ.pbLgdwai4i8aUdga2tWbycBayD5YnyYzGK-OR97wvjHQBToexbFtLpHSU0WKeOcX2X36qcNDRZHgzlCcto7ybg
+
+### All workoutplans with status if admin all users', if user his/her own all (pagination default page = 1 & size = 10)
+GET http://localhost:8080/api/v1/workoutplan?status=PENDING
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJha2JhcjAwNyIsInVzZXJJZCI6ImUwYTY5Yjk2LTE4YTAtNGI2Ny04ZTY2LTU3OTY2OTM2ZjQ0ZCIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn0seyJhdXRob3JpdHkiOiJST0xFX1VTRVIifV0sImlhdCI6MTczNjY3NDEyNSwiZXhwIjoxNzM2Njc3NzI1fQ.pbLgdwai4i8aUdga2tWbycBayD5YnyYzGK-OR97wvjHQBToexbFtLpHSU0WKeOcX2X36qcNDRZHgzlCcto7ybg
 
 ### User's all workoutplans (pagination default page = 1 & size = 10) -> changed, not active right now
 # GET http://localhost:8080/api/v1/workoutplan/mine

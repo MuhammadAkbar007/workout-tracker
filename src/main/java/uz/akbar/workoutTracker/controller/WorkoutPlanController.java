@@ -1,7 +1,6 @@
 package uz.akbar.workoutTracker.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -48,8 +47,7 @@ public class WorkoutPlanController {
     public ResponseEntity<?> getAll(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(value = "status", required = false) @Pattern(regexp = "ACTIVE|PENDING")
-                    WorkoutStatus status,
+            @RequestParam(required = false) WorkoutStatus status,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         AppResponse response = service.getAll(page, size, status, userDetails.getUser());
