@@ -28,12 +28,12 @@ import java.util.UUID;
 /** WorkoutPlanController */
 @RestController
 @RequestMapping("/api/v1/workoutplan")
+@PreAuthorize("isAuthenticated()")
 public class WorkoutPlanController {
 
     @Autowired private WorkoutPlanService service;
 
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> create(
             @Valid @RequestBody WorkoutPlanDto dto,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -43,7 +43,6 @@ public class WorkoutPlanController {
     }
 
     @GetMapping
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getAll(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -76,7 +75,6 @@ public class WorkoutPlanController {
     // }
 
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getById(
             @PathVariable UUID id, @AuthenticationPrincipal CustomUserDetails userDetails) {
 
@@ -85,7 +83,6 @@ public class WorkoutPlanController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> update(
             @PathVariable UUID id,
             @Valid @RequestBody WorkoutPlanUpdateDto dto,
@@ -96,7 +93,6 @@ public class WorkoutPlanController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> delete(
             @PathVariable UUID id, @AuthenticationPrincipal CustomUserDetails userDetails) {
 
@@ -105,7 +101,6 @@ public class WorkoutPlanController {
     }
 
     @GetMapping("/progress")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> trackProgress(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam(required = false, value = "userId") UUID userId) {
