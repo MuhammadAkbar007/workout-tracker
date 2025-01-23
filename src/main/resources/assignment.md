@@ -3,6 +3,9 @@
 - [x] Write a data seeder to populate database with a list of exercises.
 - [x] implement JWT authentication
 - [x] implement MapStruct
+
+> [!NOTE]
+> in-progress this task 👇
 - [ ] admin dashboard functionalities
 
 ## User
@@ -14,13 +17,8 @@
 - [x] update workout plans: Allow users to update workouts and add comments.
 - [x] delete workout plans
 - [x] list workouts:  List active or pending workouts sorted by date and time
-
-> [!NOTE]
-> in-progress this task 👇
-- [ ] schedule workout plans for specific date and times
-
-- [ ] track his progress
-- [ ] Generate reports on past workouts
+- [x] schedule workout plans for specific date and times
+- [x] track his progress
 - [ ] Delete prompt file
 
 # Entity

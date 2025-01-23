@@ -18,6 +18,7 @@ import uz.akbar.workoutTracker.mapper.ExerciseMapper;
 import uz.akbar.workoutTracker.mapper.WorkoutPlanMapper;
 import uz.akbar.workoutTracker.payload.AppResponse;
 import uz.akbar.workoutTracker.payload.ExerciseResponseDto;
+import uz.akbar.workoutTracker.payload.ProgressDto;
 import uz.akbar.workoutTracker.payload.WorkoutPlanDto;
 import uz.akbar.workoutTracker.payload.WorkoutPlanResponseDto;
 import uz.akbar.workoutTracker.payload.WorkoutPlanUpdateDto;
@@ -29,6 +30,7 @@ import uz.akbar.workoutTracker.service.WorkoutPlanService;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -46,11 +48,27 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
         return user.getRoles().stream().anyMatch(role -> role.getRoleType() == RoleType.ROLE_ADMIN);
     }
 
+    private ProgressDto formProgress(UUID userId) {
+        Optional<Instant> oldest = repository.findOldestScheduledDateTimeByOwnerId(userId);
+
+        return ProgressDto.builder()
+                .numberOfActive(repository.countByStatusAndOwnerId(WorkoutStatus.ACTIVE, userId))
+                .numberOfActive(repository.countByStatusAndOwnerId(WorkoutStatus.PENDING, userId))
+                .oldestScheduled(oldest.isPresent() ? oldest.get() : null)
+                .build();
+    }
+
     @Override
     @Transactional
     public AppResponse create(WorkoutPlanDto dto, User user) {
         if (dto.scheduledDateTime().isBefore(Instant.now()))
             throw new AppBadException("Schedule is not for future");
+
+        if (repository
+                .findByOwnerIdAndScheduledDateTime(user.getId(), dto.scheduledDateTime())
+                .isPresent()) {
+            throw new AppBadException("Workout plan is scheduled for this time");
+        }
 
         if (dto.exerciseIds() == null || dto.exerciseIds().isEmpty()) {
             throw new AppBadException("At least one exercise should be selected");
@@ -256,6 +274,17 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
         return AppResponse.builder()
                 .success(true)
                 .message("Workout plan successfully deleted")
+                .build();
+    }
+
+    @Override
+    public AppResponse trackProgress(User user, UUID userId) {
+        ProgressDto progress = formProgress(userId != null ? userId : user.getId());
+
+        return AppResponse.builder()
+                .success(true)
+                .message("Progress track:")
+                .data(progress)
                 .build();
     }
 }

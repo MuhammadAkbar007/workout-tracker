@@ -24,4 +24,6 @@ public interface WorkoutPlanService {
     AppResponse update(UUID id, WorkoutPlanUpdateDto dto, User user);
 
     AppResponse delete(UUID id, User user);
+
+    AppResponse trackProgress(User user, UUID userId);
 }

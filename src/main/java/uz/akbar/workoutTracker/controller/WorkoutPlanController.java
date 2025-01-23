@@ -103,4 +103,13 @@ public class WorkoutPlanController {
         AppResponse response = service.delete(id, userDetails.getUser());
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/progress")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> trackProgress(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam(required = false, value = "userId") UUID userId) {
+        AppResponse response = service.trackProgress(userDetails.getUser(), userId);
+        return ResponseEntity.ok(response);
+    }
 }
