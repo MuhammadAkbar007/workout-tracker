@@ -6,7 +6,11 @@
 
 > [!NOTE]
 > in-progress this task 👇
-- [ ] admin dashboard functionalities
+- [ ] admin dashboard functionalities:
+* block users
+* unblock users
+* make user admin
+* make admin user
 
 ## User
 - [x] can sign up

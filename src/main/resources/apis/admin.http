@@ -1,0 +1,25 @@
+### token for ADMIN login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+	"username": "akbar007",
+	"password": "root123"
+}
+
+### token for USER login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+	"username": "fotismenos007",
+	"password": "root123"
+}
+
+### block user
+PUT http://localhost:8080/api/v1/admin/block/cf1aec58-6ec0-46f1-b3af-8ee1f5f0b650?status=BLOCK
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiY2YxYWVjNTgtNmVjMC00NmYxLWIzYWYtOGVlMWY1ZjBiNjUwIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNzM3NjQ2NzQxLCJleHAiOjE3Mzc2NTAzNDF9.yzmu82JZ6ZbbNI7hxEV0V5EgUxViej6XuED162GdrgwDcX_EXBC8mKJFOZp_j3wXsxH7Aecq_Emsa4qpS-wA_Q
+
+### unblock user
+PUT http://localhost:8080/api/v1/admin/block/cf1aec58-6ec0-46f1-b3af-8ee1f5f0b650?status=ACTIVE
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJha2JhcjAwNyIsInVzZXJJZCI6ImUwYTY5Yjk2LTE4YTAtNGI2Ny04ZTY2LTU3OTY2OTM2ZjQ0ZCIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn0seyJhdXRob3JpdHkiOiJST0xFX1VTRVIifV0sImlhdCI6MTczNzY0NTk1MSwiZXhwIjoxNzM3NjQ5NTUxfQ._iHCUeX3fRs_DJoI8p40TAwidmn2n1u_aFodl3TsmZAo_9oI7f5U71cO_p1pTZWo01b1yLeof9AqJb_dDr1SCQ
