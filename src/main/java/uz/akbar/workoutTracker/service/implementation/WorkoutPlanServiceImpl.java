@@ -48,6 +48,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
         return user.getRoles().stream().anyMatch(role -> role.getRoleType() == RoleType.ROLE_ADMIN);
     }
 
+    @Transactional(readOnly = true)
     private ProgressDto formProgress(UUID userId) {
         Optional<Instant> oldest = repository.findOldestScheduledDateTimeByOwnerId(userId);
 
@@ -278,6 +279,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AppResponse trackProgress(User user, UUID userId) {
         ProgressDto progress = formProgress(userId != null ? userId : user.getId());
 

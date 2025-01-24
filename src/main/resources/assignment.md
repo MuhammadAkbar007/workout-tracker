@@ -6,11 +6,11 @@
 
 > [!NOTE]
 > in-progress this task 👇
-- [ ] admin dashboard functionalities:
-* block users
-* unblock users
-* make user admin
-* make admin user
+- [x] admin dashboard functionalities:
+    * block users
+    * unblock users
+    - make user admin
+    * make admin user
 
 ## User
 - [x] can sign up
@@ -23,7 +23,6 @@
 - [x] list workouts:  List active or pending workouts sorted by date and time
 - [x] schedule workout plans for specific date and times
 - [x] track his progress
-- [ ] Delete prompt file
 
 # Entity
 ## User
