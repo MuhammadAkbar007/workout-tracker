@@ -27,9 +27,9 @@ public class AdminController {
     @Autowired private AdminService service;
 
     /*
-    /api/v1/admin/block/userId?status=BLOCK
+    	/api/v1/admin/block/userId?status=BLOCK
     or
-    /api/v1/admin/block/userId?status=ACTIVE
+    	/api/v1/admin/block/userId?status=ACTIVE
     */
     @PutMapping("/block/{userId}")
     public ResponseEntity<?> blockUnblockUser(
@@ -42,9 +42,9 @@ public class AdminController {
     }
 
     /*
-    /api/v1/admin/assign/userId?roleType=ROLE_ADMIN
+    	/api/v1/admin/assign/userId?roleType=ROLE_ADMIN
     or
-    /api/v1/admin/assign/userId?roleType=ROLE_USER
+    	/api/v1/admin/assign/userId?roleType=ROLE_USER
     */
     @PutMapping("/assign/{userId}")
     public ResponseEntity<?> assignRole(

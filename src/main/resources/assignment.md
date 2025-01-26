@@ -1,15 +1,17 @@
 # Functionality
 ## System
-- [x] Write a data seeder to populate database with a list of exercises.
-- [x] implement JWT authentication
 - [x] implement MapStruct
-
-> [!NOTE]
-> in-progress this task 👇
+- [x] Write a data seeder to populate database with:
+    * list of exercises 
+    * User and Admin roles
+    * Admin user
+- [x] implement JWT authentication:
+    * access token
+    * multiple refresh tokens
 - [x] admin dashboard functionalities:
     * block users
     * unblock users
-    - make user admin
+    * make user admin
     * make admin user
 
 ## User
@@ -22,7 +24,7 @@
 - [x] delete workout plans
 - [x] list workouts:  List active or pending workouts sorted by date and time
 - [x] schedule workout plans for specific date and times
-- [x] track his progress
+- [x] track his/her progress
 
 # Entity
 ## User
@@ -83,3 +85,6 @@
 > * Exercises will be used to create workout plans.
 > * Users should only be able to access their own workout plans.
 
+> [!NOTE]
+> use `-` inside `[]` for current task
+- [-] doing this one
