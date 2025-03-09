@@ -38,255 +38,259 @@ import java.util.UUID;
 @Service
 public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
-    @Autowired private WorkoutPlanRepository repository;
-    @Autowired private ExerciseRepository exerciseRepository;
-    @Autowired private UserRepository userRepository;
-    @Autowired private ExerciseMapper exerciseMapper;
-    @Autowired private WorkoutPlanMapper mapper;
+	@Autowired
+	private WorkoutPlanRepository repository;
 
-    private boolean determineIsAdmin(User user) {
-        return user.getRoles().stream().anyMatch(role -> role.getRoleType() == RoleType.ROLE_ADMIN);
-    }
+	@Autowired
+	private ExerciseRepository exerciseRepository;
 
-    @Transactional(readOnly = true)
-    private ProgressDto formProgress(UUID userId) {
-        Optional<Instant> oldest = repository.findOldestScheduledDateTimeByOwnerId(userId);
+	@Autowired
+	private UserRepository userRepository;
 
-        return ProgressDto.builder()
-                .numberOfActive(repository.countByStatusAndOwnerId(WorkoutStatus.ACTIVE, userId))
-                .numberOfActive(repository.countByStatusAndOwnerId(WorkoutStatus.PENDING, userId))
-                .oldestScheduled(oldest.isPresent() ? oldest.get() : null)
-                .build();
-    }
+	@Autowired
+	private ExerciseMapper exerciseMapper;
 
-    @Override
-    @Transactional
-    public AppResponse create(WorkoutPlanDto dto, User user) {
-        if (dto.scheduledDateTime().isBefore(Instant.now()))
-            throw new AppBadException("Schedule is not for future");
+	@Autowired
+	private WorkoutPlanMapper mapper;
 
-        if (repository
-                .findByOwnerIdAndScheduledDateTime(user.getId(), dto.scheduledDateTime())
-                .isPresent()) {
-            throw new AppBadException("Workout plan is scheduled for this time");
-        }
+	private boolean determineIsAdmin(User user) {
+		return user.getRoles().stream().anyMatch(role -> role.getRoleType() == RoleType.ROLE_ADMIN);
+	}
 
-        if (dto.exerciseIds() == null || dto.exerciseIds().isEmpty()) {
-            throw new AppBadException("At least one exercise should be selected");
-        }
+	@Transactional(readOnly = true)
+	private ProgressDto formProgress(UUID userId) {
+		Optional<Instant> oldest = repository.findOldestScheduledDateTimeByOwnerId(userId);
 
-        Set<Exercise> exercises = new HashSet<>();
-        Set<ExerciseResponseDto> exercisesDtos = new HashSet<>();
+		return ProgressDto.builder()
+				.numberOfActive(repository.countByStatusAndOwnerId(WorkoutStatus.ACTIVE, userId))
+				.numberOfActive(repository.countByStatusAndOwnerId(WorkoutStatus.PENDING, userId))
+				.oldestScheduled(oldest.isPresent() ? oldest.get() : null)
+				.build();
+	}
 
-        // fetching exercises from database
-        for (UUID exerciseId : dto.exerciseIds()) {
-            Exercise exercise =
-                    exerciseRepository
-                            .findById(exerciseId)
-                            .orElseThrow(
-                                    () ->
-                                            new AppBadException(
-                                                    "Exercise is not found with id: "
-                                                            + exerciseId));
+	@Override
+	@Transactional
+	public AppResponse create(WorkoutPlanDto dto, User user) {
+		if (dto.scheduledDateTime().isBefore(Instant.now()))
+			throw new AppBadException("Schedule is not for future");
 
-            exercises.add(exercise);
+		if (repository
+				.findByOwnerIdAndScheduledDateTime(user.getId(), dto.scheduledDateTime())
+				.isPresent()) {
+			throw new AppBadException("Workout plan is scheduled for this time");
+		}
 
-            ExerciseResponseDto exerciseDto = exerciseMapper.toDto(exercise);
+		if (dto.exerciseIds() == null || dto.exerciseIds().isEmpty()) {
+			throw new AppBadException("At least one exercise should be selected");
+		}
 
-            exercisesDtos.add(exerciseDto);
-        }
+		Set<Exercise> exercises = new HashSet<>();
+		Set<ExerciseResponseDto> exercisesDtos = new HashSet<>();
 
-        WorkoutPlan workoutPlan =
-                WorkoutPlan.builder()
-                        .status(WorkoutStatus.PENDING)
-                        .scheduledDateTime(dto.scheduledDateTime())
-                        .owner(user)
-                        .exercises(exercises)
-                        .createdAt(Instant.now())
-                        .updatedAt(Instant.now())
-                        .createdBy(user)
-                        .lastModifiedBy(user)
-                        .build();
+		// fetching exercises from database
+		for (UUID exerciseId : dto.exerciseIds()) {
+			Exercise exercise = exerciseRepository
+					.findById(exerciseId)
+					.orElseThrow(
+							() -> new AppBadException(
+									"Exercise is not found with id: "
+											+ exerciseId));
 
-        WorkoutPlan saved = repository.save(workoutPlan);
+			exercises.add(exercise);
 
-        WorkoutPlanResponseDto responseDto = mapper.toDto(saved);
+			ExerciseResponseDto exerciseDto = exerciseMapper.toDto(exercise);
 
-        return AppResponse.builder()
-                .success(true)
-                .message("Workout plan successfully created")
-                .data(responseDto)
-                .build();
-    }
+			exercisesDtos.add(exerciseDto);
+		}
 
-    // get all users' all workoutPlans for only admins
-    /*     @Override
-       @Transactional(readOnly = true)
-       public AppResponse getAllForAdmins(int page, int size) {
-           Page<WorkoutPlan> allWorkoutPlans =
-                   repository.findAll(
-                           PageRequest.of(page - 1, size, Sort.by("createdAt").descending()));
+		WorkoutPlan workoutPlan = WorkoutPlan.builder()
+				.status(WorkoutStatus.PENDING)
+				.scheduledDateTime(dto.scheduledDateTime())
+				.owner(user)
+				.exercises(exercises)
+				.createdAt(Instant.now())
+				.updatedAt(Instant.now())
+				.createdBy(user)
+				.lastModifiedBy(user)
+				.build();
 
-           Page<WorkoutPlanResponseDto> response = allWorkoutPlans.map(mapper::toDto);
+		WorkoutPlan saved = repository.save(workoutPlan);
 
-           return AppResponse.builder()
-                   .success(true)
-                   .message("Workout plans of page " + page)
-                   .data(response)
-                   .build();
-        }
-    */
+		WorkoutPlanResponseDto responseDto = mapper.toDto(saved);
 
-    // get user's all workoutPlans
-    /* @Override
-       @Transactional(readOnly = true)
-       public AppResponse getAll(UUID userId, int page, int size) {
-           Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
+		return AppResponse.builder()
+				.success(true)
+				.message("Workout plan successfully created")
+				.data(responseDto)
+				.build();
+	}
 
-           Page<WorkoutPlan> allWorkoutPlans = repository.findByOwnerId(userId, pageable);
+	// get all users' all workoutPlans for only admins
+	/*
+	 * @Override
+	 * 
+	 * @Transactional(readOnly = true)
+	 * public AppResponse getAllForAdmins(int page, int size) {
+	 * Page<WorkoutPlan> allWorkoutPlans =
+	 * repository.findAll(
+	 * PageRequest.of(page - 1, size, Sort.by("createdAt").descending()));
+	 * 
+	 * Page<WorkoutPlanResponseDto> response = allWorkoutPlans.map(mapper::toDto);
+	 * 
+	 * return AppResponse.builder()
+	 * .success(true)
+	 * .message("Workout plans of page " + page)
+	 * .data(response)
+	 * .build();
+	 * }
+	 */
 
-           Page<WorkoutPlanResponseDto> response = allWorkoutPlans.map(mapper::toDto);
+	// get user's all workoutPlans
+	/*
+	 * @Override
+	 * 
+	 * @Transactional(readOnly = true)
+	 * public AppResponse getAll(UUID userId, int page, int size) {
+	 * Pageable pageable = PageRequest.of(page - 1, size,
+	 * Sort.by("createdAt").descending());
+	 * 
+	 * Page<WorkoutPlan> allWorkoutPlans = repository.findByOwnerId(userId,
+	 * pageable);
+	 * 
+	 * Page<WorkoutPlanResponseDto> response = allWorkoutPlans.map(mapper::toDto);
+	 * 
+	 * return AppResponse.builder()
+	 * .success(true)
+	 * .message("Workout plans of page " + page)
+	 * .data(response)
+	 * .build();
+	 * }
+	 */
 
-           return AppResponse.builder()
-                   .success(true)
-                   .message("Workout plans of page " + page)
-                   .data(response)
-                   .build();
-       }
-    */
+	@Override
+	@Transactional(readOnly = true)
+	public AppResponse getAll(int page, int size, WorkoutStatus status, User user) {
+		Page<WorkoutPlan> workoutPlans;
 
-    @Override
-    @Transactional(readOnly = true)
-    public AppResponse getAll(int page, int size, WorkoutStatus status, User user) {
-        Page<WorkoutPlan> workoutPlans;
+		Pageable pageable = PageRequest.of(page - 1, size, Sort.by("scheduledDateTime").descending());
 
-        Pageable pageable =
-                PageRequest.of(page - 1, size, Sort.by("scheduledDateTime").descending());
+		if (determineIsAdmin(user)) {
+			workoutPlans = (status != null)
+					? repository.findAllByStatus(status, pageable)
+					: repository.findAll(pageable);
+		} else {
+			workoutPlans = (status != null)
+					? repository.findAllByStatusAndOwnerId(status, user.getId(), pageable)
+					: repository.findByOwnerId(user.getId(), pageable);
+		}
 
-        if (determineIsAdmin(user)) {
-            workoutPlans =
-                    (status != null)
-                            ? repository.findAllByStatus(status, pageable)
-                            : repository.findAll(pageable);
-        } else {
-            workoutPlans =
-                    (status != null)
-                            ? repository.findAllByStatusAndOwnerId(status, user.getId(), pageable)
-                            : repository.findByOwnerId(user.getId(), pageable);
-        }
+		Page<WorkoutPlanResponseDto> response = workoutPlans.map(mapper::toDto);
 
-        Page<WorkoutPlanResponseDto> response = workoutPlans.map(mapper::toDto);
+		return AppResponse.builder()
+				.success(true)
+				.message("Workout plans of page " + page)
+				.data(response)
+				.build();
+	}
 
-        return AppResponse.builder()
-                .success(true)
-                .message("Workout plans of page " + page)
-                .data(response)
-                .build();
-    }
+	@Override
+	@Transactional(readOnly = true)
+	public AppResponse getById(UUID id, User user) {
+		WorkoutPlan workoutPlan;
 
-    @Override
-    @Transactional(readOnly = true)
-    public AppResponse getById(UUID id, User user) {
-        WorkoutPlan workoutPlan;
+		if (determineIsAdmin(user)) {
+			workoutPlan = repository
+					.findById(id)
+					.orElseThrow(() -> new AppBadException("Workout plan not found"));
+		} else {
+			workoutPlan = repository
+					.findByIdAndOwnerId(id, user.getId())
+					.orElseThrow(() -> new AppBadException("Workout plan not found"));
+		}
 
-        if (determineIsAdmin(user)) {
-            workoutPlan =
-                    repository
-                            .findById(id)
-                            .orElseThrow(() -> new AppBadException("Workout plan not found"));
-        } else {
-            workoutPlan =
-                    repository
-                            .findByIdAndOwnerId(id, user.getId())
-                            .orElseThrow(() -> new AppBadException("Workout plan not found"));
-        }
+		return AppResponse.builder()
+				.success(true)
+				.message("Workout plan retrieved successfully")
+				.data(mapper.toDto(workoutPlan))
+				.build();
+	}
 
-        return AppResponse.builder()
-                .success(true)
-                .message("Workout plan retrieved successfully")
-                .data(mapper.toDto(workoutPlan))
-                .build();
-    }
+	@Override
+	@Transactional
+	public AppResponse update(UUID id, WorkoutPlanUpdateDto dto, User user) {
+		WorkoutPlan workoutPlan;
+		boolean isAdmin = determineIsAdmin(user);
 
-    @Override
-    @Transactional
-    public AppResponse update(UUID id, WorkoutPlanUpdateDto dto, User user) {
-        WorkoutPlan workoutPlan;
-        boolean isAdmin = determineIsAdmin(user);
+		if (dto.scheduledDateTime().isBefore(Instant.now()))
+			throw new AppBadException("Schedule is not for future");
 
-        if (dto.scheduledDateTime().isBefore(Instant.now()))
-            throw new AppBadException("Schedule is not for future");
+		if (isAdmin) {
+			workoutPlan = repository
+					.findById(id)
+					.orElseThrow(() -> new AppBadException("Workout plan not found"));
+		} else {
+			workoutPlan = repository
+					.findByIdAndOwnerId(id, user.getId())
+					.orElseThrow(() -> new AppBadException("Workout plan not found"));
+		}
 
-        if (isAdmin) {
-            workoutPlan =
-                    repository
-                            .findById(id)
-                            .orElseThrow(() -> new AppBadException("Workout plan not found"));
-        } else {
-            workoutPlan =
-                    repository
-                            .findByIdAndOwnerId(id, user.getId())
-                            .orElseThrow(() -> new AppBadException("Workout plan not found"));
-        }
+		workoutPlan.setStatus(dto.status());
+		workoutPlan.setScheduledDateTime(dto.scheduledDateTime());
 
-        workoutPlan.setStatus(dto.status());
-        workoutPlan.setScheduledDateTime(dto.scheduledDateTime());
+		if (isAdmin && dto.ownerId() != null) {
+			User owner = userRepository
+					.findById(dto.ownerId())
+					.orElseThrow(() -> new AppBadException("User not found"));
 
-        if (isAdmin && dto.ownerId() != null) {
-            User owner =
-                    userRepository
-                            .findById(dto.ownerId())
-                            .orElseThrow(() -> new AppBadException("User not found"));
+			workoutPlan.setOwner(owner);
+		}
 
-            workoutPlan.setOwner(owner);
-        }
+		if (dto.exerciseIds() != null && !dto.exerciseIds().isEmpty()) {
+			List<Exercise> exercises = exerciseRepository.findAllById(dto.exerciseIds());
 
-        if (dto.exerciseIds() != null && !dto.exerciseIds().isEmpty()) {
-            List<Exercise> exercises = exerciseRepository.findAllById(dto.exerciseIds());
+			if (exercises.size() != dto.exerciseIds().size())
+				throw new AppBadException("One or more exercises not foun");
 
-            if (exercises.size() != dto.exerciseIds().size())
-                throw new AppBadException("One or more exercises not foun");
+			workoutPlan.setExercises(exerciseMapper.toSet(exercises));
+		}
 
-            workoutPlan.setExercises(exerciseMapper.toSet(exercises));
-        }
+		WorkoutPlan saved = repository.save(workoutPlan);
 
-        WorkoutPlan saved = repository.save(workoutPlan);
+		return AppResponse.builder()
+				.success(true)
+				.message("Workout plan updated successfully")
+				.data(mapper.toDto(saved))
+				.build();
+	}
 
-        return AppResponse.builder()
-                .success(true)
-                .message("Workout plan updated successfully")
-                .data(mapper.toDto(saved))
-                .build();
-    }
+	@Override
+	@Transactional
+	public AppResponse delete(UUID id, User user) {
+		if (determineIsAdmin(user)) {
+			repository.deleteById(id);
+		} else {
+			int deletedCount = repository.deleteByIdAndOwnerId(id, user.getId());
 
-    @Override
-    @Transactional
-    public AppResponse delete(UUID id, User user) {
-        if (determineIsAdmin(user)) {
-            repository.deleteById(id);
-        } else {
-            int deletedCount = repository.deleteByIdAndOwnerId(id, user.getId());
+			if (deletedCount == 0)
+				throw new AppBadException(
+						"Workout plan not found or you don't have permission to delete it");
+		}
 
-            if (deletedCount == 0)
-                throw new AppBadException(
-                        "Workout plan not found or you don't have permission to delete it");
-        }
+		return AppResponse.builder()
+				.success(true)
+				.message("Workout plan successfully deleted")
+				.build();
+	}
 
-        return AppResponse.builder()
-                .success(true)
-                .message("Workout plan successfully deleted")
-                .build();
-    }
+	@Override
+	@Transactional(readOnly = true)
+	public AppResponse trackProgress(User user, UUID userId) {
+		ProgressDto progress = formProgress(userId != null ? userId : user.getId());
 
-    @Override
-    @Transactional(readOnly = true)
-    public AppResponse trackProgress(User user, UUID userId) {
-        ProgressDto progress = formProgress(userId != null ? userId : user.getId());
-
-        return AppResponse.builder()
-                .success(true)
-                .message("Progress track:")
-                .data(progress)
-                .build();
-    }
+		return AppResponse.builder()
+				.success(true)
+				.message("Progress track:")
+				.data(progress)
+				.build();
+	}
 }

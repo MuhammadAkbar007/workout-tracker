@@ -2,7 +2,7 @@
 
 ## Description
 🏋️ An API-based workout tracker application that enables users to plan, schedule, and track their workouts while providing admin features for managing users.
-Built with **Spring Boot**, it implements JWT-based authentication, MapStruct for DTO mapping, and supports seamless user experience with robust functionality.
+Built with **Spring Boot**, it implements JWT-based authentication, MapStruct for DTO mapping, JPA audit and supports seamless user experience with robust functionality.
 
 ---
 
