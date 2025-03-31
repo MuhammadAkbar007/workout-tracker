@@ -26,101 +26,97 @@ import java.util.Set;
 @Configuration
 public class DataInitializer {
 
-    @Bean
-    @Transactional
-    public CommandLineRunner initData(
-            UserRepository userRepository,
-            RoleRepository roleRepository,
-            PasswordEncoder passwordEncoder,
-            ExerciseRepository exerciseRepository) {
-        return args -> {
-            // create userRole if doesnt exist
-            Role userRole =
-                    roleRepository
-                            .findByRoleType(RoleType.ROLE_USER)
-                            .orElseGet(
-                                    () -> {
-                                        Role role = new Role();
-                                        role.setRoleType(RoleType.ROLE_USER);
+	@Bean
+	@Transactional
+	public CommandLineRunner initData(
+			UserRepository userRepository,
+			RoleRepository roleRepository,
+			PasswordEncoder passwordEncoder,
+			ExerciseRepository exerciseRepository) {
+		return args -> {
 
-                                        return roleRepository.save(role);
-                                    });
+			// create userRole if not exist
+			Role userRole = roleRepository
+					.findByRoleType(RoleType.ROLE_USER)
+					.orElseGet(
+							() -> {
+								Role role = new Role();
+								role.setRoleType(RoleType.ROLE_USER);
 
-            // create adminRole if doesnt exist
-            Role adminRole =
-                    roleRepository
-                            .findByRoleType(RoleType.ROLE_ADMIN)
-                            .orElseGet(
-                                    () -> {
-                                        Role role = new Role();
-                                        role.setRoleType(RoleType.ROLE_ADMIN);
+								return roleRepository.save(role);
+							});
 
-                                        return roleRepository.save(role);
-                                    });
+			// create adminRole if not exists
+			Role adminRole = roleRepository
+					.findByRoleType(RoleType.ROLE_ADMIN)
+					.orElseGet(
+							() -> {
+								Role role = new Role();
+								role.setRoleType(RoleType.ROLE_ADMIN);
 
-            // create admin & user User if doesnt exist
-            if (!userRepository.existsByEmailOrUsername("akbarjondev007@gmail.com", "akbar007")) {
-                Set<Role> roles = new HashSet<>();
-                roles.add(adminRole);
-                roles.add(userRole);
+								return roleRepository.save(role);
+							});
 
-                User user =
-                        User.builder()
-                                .email("akbarjondev007@gmail.com")
-                                .password(passwordEncoder.encode("root123"))
-                                .username("akbar007")
-                                .status(GeneralStatus.ACTIVE)
-                                .roles(roles)
-                                .build();
+			// create admin & user User if not exists
+			if (!userRepository.existsByEmailOrUsername("akbarjondev007@gmail.com", "akbar007")) {
+				Set<Role> roles = new HashSet<>();
+				roles.add(adminRole);
+				roles.add(userRole);
 
-                userRepository.save(user);
+				User user = User.builder()
+						.email("akbarjondev007@gmail.com")
+						.password(passwordEncoder.encode("root123"))
+						.username("akbar007")
+						.status(GeneralStatus.ACTIVE)
+						.roles(roles)
+						.build();
 
-                if (exerciseRepository.count() <= 0) {
-                    Exercise running =
-                            Exercise.builder()
-                                    .name("running")
-                                    .description("Running 1 kilometers.")
-                                    .category(ExerciseCategory.CARDIO)
-                                    .muscleGroup(MuscleGroup.LEGS)
-                                    .set(1)
-                                    .createdAt(Instant.now())
-                                    .updatedAt(Instant.now())
-                                    .createdBy(user)
-                                    .lastModifiedBy(user)
-                                    .build();
+				userRepository.save(user);
 
-                    Exercise benchPress =
-                            Exercise.builder()
-                                    .name("benchPress")
-                                    .description("Bench press exercise for chest.")
-                                    .category(ExerciseCategory.STRENGTH)
-                                    .muscleGroup(MuscleGroup.CHEST)
-                                    .set(3)
-                                    .repetition(7)
-                                    .weight(90.5)
-                                    .createdAt(Instant.now())
-                                    .updatedAt(Instant.now())
-                                    .createdBy(user)
-                                    .lastModifiedBy(user)
-                                    .build();
+				// create exercises if not exist
+				if (exerciseRepository.count() <= 0) {
+					Exercise running = Exercise.builder()
+							.name("running")
+							.description("Running 1 kilometers.")
+							.category(ExerciseCategory.CARDIO)
+							.muscleGroup(MuscleGroup.LEGS)
+							.set(1)
+							.createdAt(Instant.now())
+							.updatedAt(Instant.now())
+							.createdBy(user)
+							.lastModifiedBy(user)
+							.build();
 
-                    Exercise catCowStretch =
-                            Exercise.builder()
-                                    .name("catCowStretch")
-                                    .description(
-                                            "Cat-cow stretching exercise for flexibility of back.")
-                                    .category(ExerciseCategory.FLEXIBILITY)
-                                    .muscleGroup(MuscleGroup.BACK)
-                                    .set(3)
-                                    .createdAt(Instant.now())
-                                    .updatedAt(Instant.now())
-                                    .createdBy(user)
-                                    .lastModifiedBy(user)
-                                    .build();
+					Exercise benchPress = Exercise.builder()
+							.name("benchPress")
+							.description("Bench press exercise for chest.")
+							.category(ExerciseCategory.STRENGTH)
+							.muscleGroup(MuscleGroup.CHEST)
+							.set(3)
+							.repetition(7)
+							.weight(90.5)
+							.createdAt(Instant.now())
+							.updatedAt(Instant.now())
+							.createdBy(user)
+							.lastModifiedBy(user)
+							.build();
 
-                    exerciseRepository.saveAll(List.of(running, benchPress, catCowStretch));
-                }
-            }
-        };
-    }
+					Exercise catCowStretch = Exercise.builder()
+							.name("catCowStretch")
+							.description(
+									"Cat-cow stretching exercise for flexibility of back.")
+							.category(ExerciseCategory.FLEXIBILITY)
+							.muscleGroup(MuscleGroup.BACK)
+							.set(3)
+							.createdAt(Instant.now())
+							.updatedAt(Instant.now())
+							.createdBy(user)
+							.lastModifiedBy(user)
+							.build();
+
+					exerciseRepository.saveAll(List.of(running, benchPress, catCowStretch));
+				}
+			}
+		};
+	}
 }
