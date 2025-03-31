@@ -6,10 +6,8 @@ import uz.akbar.workoutTracker.entity.User;
 import uz.akbar.workoutTracker.payload.UserDto;
 
 /** UserMapper */
-@Mapper(
-        componentModel = "spring",
-        uses = {RoleMapper.class, WorkoutPlanMapper.class})
+@Mapper(componentModel = "spring", uses = { RoleMapper.class, WorkoutPlanMapper.class })
 public interface UserMapper {
 
-    UserDto toDto(User user);
+	UserDto toDto(User user);
 }

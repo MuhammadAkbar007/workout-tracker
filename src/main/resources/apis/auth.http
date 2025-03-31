@@ -32,7 +32,7 @@ POST http://localhost:8080/api/v1/auth/refresh
 Content-Type: application/json
 
 {
-	"refreshToken": "fe76c490-9f6f-4c1d-b166-8d9969728347"
+	"refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3Rpc21lbm9zMDA3IiwidXNlcklkIjoiY2YxYWVjNTgtNmVjMC00NmYxLWIzYWYtOGVlMWY1ZjBiNjUwIiwiaWF0IjoxNzQzMzk2NTcyLCJleHAiOjE3NDQwMDEzNzJ9.3-YeTNwqJkKhmifQeLYRrPyatBhJpA6qcmvHb_GU3bQeS5KGGZleL5OXN9XKBrcFp1k_isZ4Gos-pqWwwCG-ng"
 }
 
 ### LogOut user

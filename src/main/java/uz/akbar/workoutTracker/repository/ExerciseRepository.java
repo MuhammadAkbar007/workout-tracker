@@ -7,4 +7,5 @@ import uz.akbar.workoutTracker.entity.Exercise;
 import java.util.UUID;
 
 /** ExerciseRepository */
-public interface ExerciseRepository extends JpaRepository<Exercise, UUID> {}
+public interface ExerciseRepository extends JpaRepository<Exercise, UUID> {
+}

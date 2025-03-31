@@ -10,9 +10,10 @@ import java.util.UUID;
 /** UserDto */
 @Builder
 public record UserDto(
-        UUID id,
-        String username,
-        String email,
-        GeneralStatus status,
-        Set<RoleDto> roles,
-        Set<WorkoutPlanResponseDto> workoutPlans) {}
+		UUID id,
+		String username,
+		String email,
+		GeneralStatus status,
+		Set<RoleDto> roles,
+		Set<WorkoutPlanResponseDto> workoutPlans) {
+}
