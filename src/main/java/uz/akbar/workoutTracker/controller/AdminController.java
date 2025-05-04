@@ -24,35 +24,36 @@ import java.util.UUID;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
-    @Autowired private AdminService service;
+	@Autowired
+	private AdminService service;
 
-    /*
-    	/api/v1/admin/block/userId?status=BLOCK
-    or
-    	/api/v1/admin/block/userId?status=ACTIVE
-    */
-    @PutMapping("/block/{userId}")
-    public ResponseEntity<?> blockUnblockUser(
-            @PathVariable UUID userId,
-            @RequestParam GeneralStatus status,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
+	/*
+	 * /api/v1/admin/block/userId?status=BLOCK
+	 * or
+	 * /api/v1/admin/block/userId?status=ACTIVE
+	 */
+	@PutMapping("/block/{userId}")
+	public ResponseEntity<?> blockUnblockUser(
+			@PathVariable UUID userId,
+			@RequestParam(required = true) GeneralStatus status,
+			@AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        AppResponse response = service.blockUnblockUser(userId, status, userDetails.getUserId());
-        return ResponseEntity.ok(response);
-    }
+		AppResponse response = service.blockUnblockUser(userId, status, userDetails.getUserId());
+		return ResponseEntity.ok(response);
+	}
 
-    /*
-    	/api/v1/admin/assign/userId?roleType=ROLE_ADMIN
-    or
-    	/api/v1/admin/assign/userId?roleType=ROLE_USER
-    */
-    @PutMapping("/assign/{userId}")
-    public ResponseEntity<?> assignRole(
-            @PathVariable UUID userId,
-            @RequestParam RoleType roleType,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
+	/*
+	 * /api/v1/admin/assign/userId?roleType=ROLE_ADMIN
+	 * or
+	 * /api/v1/admin/assign/userId?roleType=ROLE_USER
+	 */
+	@PutMapping("/assign/{userId}")
+	public ResponseEntity<?> assignRole(
+			@PathVariable UUID userId,
+			@RequestParam RoleType roleType,
+			@AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        AppResponse response = service.assignRole(userId, roleType, userDetails.getUserId());
-        return ResponseEntity.ok(response);
-    }
+		AppResponse response = service.assignRole(userId, roleType, userDetails.getUserId());
+		return ResponseEntity.ok(response);
+	}
 }
