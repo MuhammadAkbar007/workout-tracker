@@ -50,7 +50,7 @@ public class AdminController {
 	@PutMapping("/assign/{userId}")
 	public ResponseEntity<?> assignRole(
 			@PathVariable UUID userId,
-			@RequestParam RoleType roleType,
+			@RequestParam(required = true) RoleType roleType,
 			@AuthenticationPrincipal CustomUserDetails userDetails) {
 
 		AppResponse response = service.assignRole(userId, roleType, userDetails.getUserId());
