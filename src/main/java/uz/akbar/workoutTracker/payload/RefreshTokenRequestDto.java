@@ -4,4 +4,5 @@ import jakarta.validation.constraints.NotBlank;
 
 /** RefreshTokenRequestDto */
 public record RefreshTokenRequestDto(
-        @NotBlank(message = "token is required") String refreshToken) {}
+		@NotBlank(message = "token is required") String refreshToken) {
+}

@@ -17,20 +17,20 @@ import java.util.Optional;
 @EnableJpaAuditing
 public class JpaAuditConfig {
 
-    @Bean
-    public AuditorAware<User> auditorProvider() {
-        return () -> {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	@Bean
+	public AuditorAware<User> auditorProvider() {
+		return () -> {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            if (authentication == null
-                    || !authentication.isAuthenticated()
-                    || "anonymousUser".equals(authentication.getPrincipal())) {
-                return Optional.empty();
-            }
+			if (authentication == null
+					|| !authentication.isAuthenticated()
+					|| "anonymousUser".equals(authentication.getPrincipal())) {
+				return Optional.empty();
+			}
 
-            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+			CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-            return Optional.of(customUserDetails.getUser());
-        };
-    }
+			return Optional.of(customUserDetails.getUser());
+		};
+	}
 }
